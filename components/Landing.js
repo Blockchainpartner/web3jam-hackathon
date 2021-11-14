@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import useWeb3Ctx from "../contexts/web3Context";
 import WalletsModal from "./modals/WalletsModal";
 
 const WalletInput = () => {

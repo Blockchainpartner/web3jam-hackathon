@@ -1,11 +1,30 @@
-import { useState } from "react";
-import useWeb3Ctx from "../../contexts/web3Context";
+import { useWeb3React } from "@web3-react/core";
+import { useEffect, useState } from "react";
+import { connectorsByName } from "../../utils/connectors";
 import ClientOnlyPortal from "../ClientOnlyPortal";
 
 export default function WalletsModal() {
   const [open, setOpen] = useState();
 
-  const { requestAccess } = useWeb3Ctx();
+  const context = useWeb3React();
+  const {
+    connector,
+    library,
+    chainId,
+    account,
+    activate,
+    deactivate,
+    active,
+    error,
+  } = context;
+
+  // handle logic to recognize the connector currently being activated
+  const [activatingConnector, setActivatingConnector] = useState();
+  useEffect(() => {
+    if (activatingConnector && activatingConnector === connector) {
+      setActivatingConnector(undefined);
+    }
+  }, [activatingConnector, connector]);
 
   return (
     <>
@@ -20,7 +39,10 @@ export default function WalletsModal() {
               <div className="flex flex-col gap-2">
                 <div
                   className="border border-mm p-3 flex items-center rounded cursor-pointer hover:bg-mm-100"
-                  onClick={requestAccess}
+                  onClick={() => {
+                    setActivatingConnector(connectorsByName.Injected)
+                    activate(connectorsByName.Injected)
+                  }}
                 >
                   <img
                     src="/icons/metamask.svg"
