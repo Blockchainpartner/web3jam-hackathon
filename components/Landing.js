@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import useWeb3Ctx from "../contexts/useWeb3";
+import useWeb3Ctx from "../contexts/web3Context";
+import WalletsModal from "./modals/WalletsModal";
 
 const WalletInput = () => {
   const [address, setAddress] = useState("");
 
-  const {requestAccess} = useWeb3Ctx();
+  const { requestAccess } = useWeb3Ctx();
 
   return (
     <div className="box my-8 flex items-center justify-between w-full xl:w-2/3">
@@ -15,9 +16,7 @@ const WalletInput = () => {
         type="text"
         placeholder="Enter your address or ..."
       />
-      <button className="btn" onClick={requestAccess}>
-        {"Connect Wallet"}
-      </button>
+      <WalletsModal />
     </div>
   );
 };

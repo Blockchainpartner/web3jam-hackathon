@@ -1,17 +1,17 @@
 import "../style.css";
 import Head from "next/head";
 import Navbar from "../components/Navbar";
-import { Web3ContextApp } from "../contexts/useWeb3";
+import { Web3ContextApp } from "../contexts/web3Context";
 
-const AppWrapper = ({ Component, pageProps, router }) => {
+const AppWrapper = ({ Component, pageProps }) => {
   return (
-    <main
-      className="w-5/6 pt-10 m-auto flex flex-col"
-      style={{ minHeight: "100vh" }}
-    >
-      <Navbar />
-      <Component {...pageProps} />
-    </main>
+      <main
+        className="w-5/6 pt-10 m-auto flex flex-col"
+        style={{ minHeight: "100vh" }}
+      >
+        <Navbar />
+        <Component {...pageProps} />
+      </main>
   );
 };
 
