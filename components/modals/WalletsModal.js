@@ -9,13 +9,6 @@ export default function WalletsModal() {
   const context = useWeb3React();
   const {
     connector,
-    library,
-    chainId,
-    account,
-    activate,
-    deactivate,
-    active,
-    error,
   } = context;
 
   // handle logic to recognize the connector currently being activated
