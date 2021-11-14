@@ -10,7 +10,7 @@ const RPC_URLS = {
 export const injected = new InjectedConnector({ supportedChainIds: [250, 56] });
 
 export const walletconnect = new WalletConnectConnector({
-  rpc: { 56: RPC_URLS[56] },
+  rpc: { 250: RPC_URLS[250], 56: RPC_URLS[56] },
   qrcode: true,
 });
 
