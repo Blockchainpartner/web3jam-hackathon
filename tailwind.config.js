@@ -15,6 +15,10 @@ module.exports = {
         brand2: "#E2AB45",
         success: "#18C435",
         danger: "#FC4850",
+        // OTHER
+        mm: "#F6815B",
+        "mm-100": "#ffe8e0",
+        wc: "#3b99fc",
       },
       fontFamily: {
         sans: ["Montserrat"],

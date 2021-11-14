@@ -4,9 +4,6 @@ import WalletsModal from "./modals/WalletsModal";
 
 const WalletInput = () => {
   const [address, setAddress] = useState("");
-
-  const { requestAccess } = useWeb3Ctx();
-
   return (
     <div className="box my-8 flex items-center justify-between w-full xl:w-2/3">
       <input

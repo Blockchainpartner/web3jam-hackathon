@@ -27,11 +27,8 @@
   .modal {
     background-color: white;
     position: absolute;
-    top: 10%;
-    right: 10%;
-    bottom: 10%;
-    left: 10%;
-    padding: 1em;
+    left: 0;
+    right: 0;
     border-radius: 8px;
   }
 
