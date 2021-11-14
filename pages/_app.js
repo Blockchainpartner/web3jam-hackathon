@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar";
 
 const AppWrapper = ({ Component, pageProps, router }) => {
   return (
-    <main className="xl:w-5/6 xl:pt-10 m-auto flex flex-col" style={{minHeight: '100vh'}}>
+    <main className="w-5/6 pt-10 m-auto flex flex-col" style={{minHeight: '100vh'}}>
       <Navbar />
       <Component {...pageProps} />
     </main>
