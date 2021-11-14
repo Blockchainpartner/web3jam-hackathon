@@ -9,6 +9,7 @@ export default function WalletsModal() {
   const context = useWeb3React();
   const {
     connector,
+    activate,
   } = context;
 
   // handle logic to recognize the connector currently being activated
