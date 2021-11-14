@@ -5,6 +5,7 @@
 @tailwind utilities;
 
 @layer base {
+  /* GENERAL */
   html,
   body,
   #__next {
@@ -13,6 +14,41 @@
   a {
     @apply text-blue-600;
   }
+
+  /* HEADINGS */
+  h1 {
+    @apply text-7xl;
+  }
+  h2 {
+    @apply text-6xl;
+  }
+  h3 {
+    @apply text-5xl;
+  }
+  h4 {
+    @apply text-4xl;
+  }
+  h5 {
+    @apply text-3xl;
+  }
+  h6 {
+    @apply text-2xl;
+  }
+
+  /* COMPONENTS */
+
+  .btn {
+      @apply rounded flex items-center justify-center bg-gradient-to-r from-brand1 to-brand2;
+  }
+  .btn>* {
+      @apply text-white font-medium;
+  }
+
+  .box {
+      @apply bg-tile px-6 py-4 rounded;
+  }
+
+  /* FEATURES */
 
   .donutSpinner {
     display: inline-block;

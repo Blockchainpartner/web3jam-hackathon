@@ -16,6 +16,13 @@ export default function Home() {
           </code>
         </p>
 
+        <h1>Hello Experiment</h1>
+        <h2>Hello Experiment</h2>
+        <h3>Hello Experiment</h3>
+        <h4>Hello Experiment</h4>
+        <h5>Hello Experiment</h5>
+        <h6>Hello Experiment</h6>
+
         <div className="flex flex-wrap items-center justify-around max-w-4xl mt-6 sm:w-full">
           <a
             href="https://nextjs.org/docs"
