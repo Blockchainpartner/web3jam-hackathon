@@ -12,7 +12,7 @@
     @apply m-0 h-full;
   }
   a {
-    @apply text-blue-600;
+    @apply text-black font-medium;
   }
 
   /* HEADINGS */
@@ -38,17 +38,24 @@
   /* COMPONENTS */
 
   .btn {
-      @apply rounded flex items-center justify-center bg-gradient-to-r from-brand1 to-brand2;
+    @apply rounded flex items-center justify-center bg-gradient-to-r from-brand1 to-brand2 text-white font-semibold px-4 py-2 transition-opacity duration-300 transform hover:opacity-80;
   }
-  .btn>* {
-      @apply text-white font-medium;
+  .btn > * {
+    @apply text-white font-medium;
   }
 
   .box {
-      @apply bg-tile px-6 py-4 rounded;
+    @apply bg-tile px-6 py-4 rounded;
   }
 
   /* FEATURES */
+
+  .sp-input {
+    background: none;
+  }
+  .sp-input:focus {
+    outline: none;
+  }
 
   .donutSpinner {
     display: inline-block;

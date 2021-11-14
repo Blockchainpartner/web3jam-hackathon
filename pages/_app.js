@@ -1,5 +1,15 @@
 import "../style.css";
 import Head from "next/head";
+import Navbar from "../components/Navbar";
+
+const AppWrapper = ({ Component, pageProps, router }) => {
+  return (
+    <main className="xl:w-5/6 xl:pt-10 m-auto flex flex-col" style={{minHeight: '100vh'}}>
+      <Navbar />
+      <Component {...pageProps} />
+    </main>
+  );
+};
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -15,7 +25,10 @@ function MyApp({ Component, pageProps }) {
           rel="stylesheet"
         />
       </Head>
-      <Component {...pageProps} />
+      <AppWrapper
+        Component={Component}
+        pageProps={pageProps}
+      />
     </>
   );
 }
