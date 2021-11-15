@@ -20,17 +20,25 @@ function baseScoringTiles() {
         <h2 className="font-extrabold text-ablack mt-2">{scoring.score}</h2>
         <Meter score={scoring.score} />
       </div>
-      {Object.keys(ScoreCriteria).map((key) => (
-        <div key={key} className="box flex items-center gap-4">
-          <div className="w-1/4 h-full bg-gray-300 rounded flex items-center justify-center">
-            {ScoreCriteriaIcon(key)}
+      {Object.keys(ScoreCriteria).map((key) => {
+        const positiveScore = scoring.baseScore[key] > 0;
+        return (
+          <div key={key} className="box flex items-start gap-4 relative">
+            <div className="w-1/4 h-full bg-gray-300 rounded flex items-center justify-center">
+              {ScoreCriteriaIcon(key)}
+            </div>
+            <div>
+              <p className="font-semibold">{ScoreCriteria[key]}</p>
+              <p className="text-sm">{`${scoringValues.baseScore[key]} ${ScoreCriteriaLabels[key]}`}</p>
+            </div>
+            <p
+              className={`absolute bottom-2 right-3 font-semibold text-2xl ${
+                positiveScore ? "text-success" : "text-danger"
+              }`}
+            >{`${positiveScore ? "+" : ""}${scoring.baseScore[key]}`}</p>
           </div>
-          <div>
-            <p className="font-semibold">{ScoreCriteria[key]}</p>
-            <p className="text-sm">{`${scoringValues.baseScore[key]} ${ScoreCriteriaLabels[key]}`}</p>
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
