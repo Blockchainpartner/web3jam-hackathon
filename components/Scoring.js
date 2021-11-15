@@ -32,7 +32,7 @@ function baseScoringTiles() {
               <p className="text-sm">{`${scoringValues.baseScore[key]} ${ScoreCriteriaLabels[key]}`}</p>
             </div>
             <p
-              className={`absolute bottom-2 right-3 font-semibold text-2xl ${
+              className={`absolute bottom-3 right-3 font-semibold text-2xl ${
                 positiveScore ? "text-success" : "text-danger"
               }`}
             >{`${positiveScore ? "+" : ""}${scoring.baseScore[key]}`}</p>
