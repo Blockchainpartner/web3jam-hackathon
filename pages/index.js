@@ -1,6 +1,7 @@
 import Tech from "../components/Tech";
 import Landing from "../components/Landing";
 import { useWeb3React } from "@web3-react/core";
+import Scoring from "../components/Scoring";
 
 export default function Home() {
   const context = useWeb3React();
@@ -17,10 +18,7 @@ export default function Home() {
   return (
     <div className="flex flex-col justify-center">
       {active ? (
-        <div>
-          <p>{account}</p>
-          <p>{chainId}</p>
-        </div>
+        <Scoring />
       ) : (
         <div className="flex flex-col justify-center">
           <Landing />

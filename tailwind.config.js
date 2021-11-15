@@ -10,6 +10,7 @@ module.exports = {
         // TEXTS
         subtxt: "#8A8A8A",
         gtxt: "#686868",
+        ablack: "#383838",
         // ACCENTS
         brand1: "#F51B6B",
         brand2: "#E2AB45",
