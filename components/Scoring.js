@@ -13,8 +13,8 @@ function baseScoringTiles() {
   const context = useScoring();
   const { scoring, scoringValues } = context;
   return (
-    <div className="grid grid-cols-4 grid-rows-2 gap-4">
-      <div className="box col-span-1 row-span-2 px-8 py-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:grid-rows-2 gap-4">
+      <div className="box md:col-span-2 lg:col-span-3 xl:col-span-1 xl:row-span-2 px-8 py-6">
         <span className="flex items-center">
           <p className="font-medium text-gtxt mr-2">{"Your Score"}</p>
           <BiInfoCircle className="text-gtxt" />
@@ -49,13 +49,13 @@ function bonusScoringTiles() {
   const context = useScoring();
   const { scoring, scoringValues } = context;
   return (
-    <div className="grid grid-rows-1 grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
       {Object.keys(scoring.protocolScore).map((key) => (
         <div key={key} className="box">
           <img
             src={`/banners/${key}.png`}
             alt={key}
-            className="rounded object-cover h-36"
+            className="rounded object-cover h-36 w-full"
           />
           <div className="mt-4">
             <p className="font-semibold">{BonusScoreCriteria[key]}</p>
