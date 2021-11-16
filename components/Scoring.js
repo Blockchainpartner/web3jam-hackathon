@@ -1,5 +1,7 @@
 import React from "react";
 import useScoring, {
+  BonusScoreCriteria,
+  BonusScoreCriteriaDetails,
   ScoreCriteria,
   ScoreCriteriaIcon,
   ScoreCriteriaLabels,
@@ -43,9 +45,39 @@ function baseScoringTiles() {
   );
 }
 
+function bonusScoringTiles() {
+  const context = useScoring();
+  const { scoring, scoringValues } = context;
+  return (
+    <div className="grid grid-rows-1 grid-cols-4 gap-4">
+      {Object.keys(scoring.protocolScore).map((key) => (
+        <div key={key} className="box">
+          <img
+            src={`/banners/${key}.png`}
+            alt={key}
+            className="rounded object-cover h-36"
+          />
+          <div className="mt-4">
+            <p className="font-semibold">{BonusScoreCriteria[key]}</p>
+            <p className="text-sm font-medium">
+              {BonusScoreCriteriaDetails[key]}
+            </p>
+            <span className="flex items-center justify-between">
+              <p className="text-sm font-light mt-1">
+                {scoringValues.protocolScore[key]}
+              </p>
+              <p className="font-semibold text-2xl text-success">{`+${scoring.protocolScore[key]}`}</p>
+            </span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 const Scoring = () => {
   return (
-    <div className="w-full xl:w-5/6 m-auto mt-20">
+    <div className="w-full xl:w-5/6 m-auto my-16">
       <div className="flex justify-between items-start">
         <div className="flex flex-col items-start">
           <h4 className="font-bold">{"Scoring Dashboard"}</h4>
@@ -64,6 +96,15 @@ const Scoring = () => {
           </p>
         </div>
         <div className="mt-6">{baseScoringTiles()}</div>
+      </div>
+      <div className="mt-10">
+        <div className="flex flex-col items-start">
+          <h6 className="font-semibold">{"Bonus Scoring"}</h6>
+          <p className="font-medium text-sm text-subtxt">
+            {"Score bonuses based on protocol-specific criteria"}
+          </p>
+        </div>
+        <div className="mt-6">{bonusScoringTiles()}</div>
       </div>
     </div>
   );

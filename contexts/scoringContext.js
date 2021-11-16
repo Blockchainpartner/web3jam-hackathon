@@ -26,13 +26,21 @@ export const ScoreCriteriaDetails = {
 };
 
 export const ScoreCriteriaLabels = {
-    cumulativeBalance: "ETH",
-    txFreq: "txs/month",
-    tokenHoldings: "tokens",
-    govTokenHoldings: "gov tokens",
-    smartContractInteractions: "calls",
-    scamTokenHoldings: "scam tokens",
-  };
+  cumulativeBalance: "ETH",
+  txFreq: "txs/month",
+  tokenHoldings: "tokens",
+  govTokenHoldings: "gov tokens",
+  smartContractInteractions: "calls",
+  scamTokenHoldings: "scam tokens",
+};
+
+export const BonusScoreCriteria = {
+  ens: "ENS Domain Holder",
+};
+
+export const BonusScoreCriteriaDetails = {
+  ens: "You own an ENS domain linked to your address",
+};
 
 export const ScoreCriteriaIcon = (criteria) => {
   switch (criteria) {
@@ -69,8 +77,6 @@ export const ScoringContextApp = ({ children }) => {
       scamTokenHoldings: -20,
     },
     protocolScore: {
-      zapper: 80,
-      aave: 120,
       ens: 200,
     },
   };
@@ -84,11 +90,9 @@ export const ScoringContextApp = ({ children }) => {
       smartContractInteractions: 11,
       scamTokenHoldings: 1,
     },
-    // protocolScore: {
-    //   zapper: 80,
-    //   aave: 120,
-    //   ens: 200,
-    // },
+    protocolScore: {
+      ens: "0xwassim.eth",
+    },
   };
 
   function scoreMark(score) {
@@ -104,7 +108,7 @@ export const ScoringContextApp = ({ children }) => {
       value={{
         scoring,
         scoreMark,
-        scoringValues
+        scoringValues,
       }}
     >
       {children}
