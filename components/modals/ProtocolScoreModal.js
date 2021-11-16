@@ -1,6 +1,6 @@
 import { useWeb3React } from "@web3-react/core";
 import { useEffect, useState } from "react";
-import { connectorsByName } from "../../utils/connectors";
+import { BsQuestionCircle } from "react-icons/bs";
 import ClientOnlyPortal from "../ClientOnlyPortal";
 
 export default function ProtocolScoreModal() {
@@ -20,7 +20,8 @@ export default function ProtocolScoreModal() {
   return (
     <>
       <button className="btn" onClick={() => setOpen(true)}>
-        {"Improve Score"}
+        <BsQuestionCircle />
+        <p className="ml-2">{"Improve Score"}</p>
       </button>
       {open && (
         <ClientOnlyPortal selector="#modal">

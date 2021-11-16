@@ -7,6 +7,7 @@ import useScoring, {
   ScoreCriteriaLabels,
 } from "../contexts/scoringContext";
 import { BiInfoCircle } from "react-icons/bi";
+import { BsStars } from "react-icons/bs";
 import Meter from "./Meter";
 import ProtocolScoreModal from "./modals/ProtocolScoreModal";
 
@@ -79,7 +80,9 @@ function bonusScoringTiles() {
     return (
       <div className="flex flex-col items-center justify-center mt-8">
         <img src="/empty.png" alt="No Protocol Scores" className="h-64" />
-        <p className="mt-6 text-xl font-semibold">{"No match with any protocol"}</p>
+        <p className="mt-6 text-xl font-semibold">
+          {"No match with any protocol"}
+        </p>
         <p className="mb-6 font-light">
           {"You don't fit in any protocol based scoring criteria"}
         </p>
@@ -101,6 +104,10 @@ const Scoring = () => {
             }
           </p>
         </div>
+        <button className="btn flex items-center justify-between">
+          <BsStars/>
+          <p className="ml-2">{"Mint your Score NFT"}</p>
+        </button>
       </div>
       <div className="mt-10">
         <div className="flex flex-col items-start">
