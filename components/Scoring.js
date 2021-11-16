@@ -8,6 +8,7 @@ import useScoring, {
 } from "../contexts/scoringContext";
 import { BiInfoCircle } from "react-icons/bi";
 import Meter from "./Meter";
+import ProtocolScoreModal from "./modals/ProtocolScoreModal";
 
 function baseScoringTiles() {
   const context = useScoring();
@@ -48,31 +49,44 @@ function baseScoringTiles() {
 function bonusScoringTiles() {
   const context = useScoring();
   const { scoring, scoringValues } = context;
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-      {Object.keys(scoring.protocolScore).map((key) => (
-        <div key={key} className="box">
-          <img
-            src={`/banners/${key}.png`}
-            alt={key}
-            className="rounded object-cover h-36 w-full"
-          />
-          <div className="mt-4">
-            <p className="font-semibold">{BonusScoreCriteria[key]}</p>
-            <p className="text-sm font-medium">
-              {BonusScoreCriteriaDetails[key]}
-            </p>
-            <span className="flex items-center justify-between">
-              <p className="text-sm font-light mt-1">
-                {scoringValues.protocolScore[key]}
+  if (scoring.protocolScoring) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {Object.keys(scoring.protocolScore).map((key) => (
+          <div key={key} className="box">
+            <img
+              src={`/banners/${key}.png`}
+              alt={key}
+              className="rounded object-cover h-36 w-full"
+            />
+            <div className="mt-4">
+              <p className="font-semibold">{BonusScoreCriteria[key]}</p>
+              <p className="text-sm font-medium">
+                {BonusScoreCriteriaDetails[key]}
               </p>
-              <p className="font-semibold text-2xl text-success">{`+${scoring.protocolScore[key]}`}</p>
-            </span>
+              <span className="flex items-center justify-between">
+                <p className="text-sm font-light mt-1">
+                  {scoringValues.protocolScore[key]}
+                </p>
+                <p className="font-semibold text-2xl text-success">{`+${scoring.protocolScore[key]}`}</p>
+              </span>
+            </div>
           </div>
-        </div>
-      ))}
-    </div>
-  );
+        ))}
+      </div>
+    );
+  } else {
+    return (
+      <div className="flex flex-col items-center justify-center mt-8">
+        <img src="/empty.png" alt="No Protocol Scores" className="h-64" />
+        <p className="mt-6 text-xl font-semibold">{"No match with any protocol"}</p>
+        <p className="mb-6 font-light">
+          {"You don't fit in any protocol based scoring criteria"}
+        </p>
+        <ProtocolScoreModal />
+      </div>
+    );
+  }
 }
 
 const Scoring = () => {
