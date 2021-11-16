@@ -56,7 +56,7 @@ const Scoring = () => {
           </p>
         </div>
       </div>
-      <div className="mt-14">
+      <div className="mt-10">
         <div className="flex flex-col items-start">
           <h6 className="font-semibold">{"Base Scoring"}</h6>
           <p className="font-medium text-sm text-subtxt">
