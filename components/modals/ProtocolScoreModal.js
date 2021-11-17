@@ -21,7 +21,7 @@ export default function ProtocolScoreModal() {
     <>
       <button className="btn" onClick={() => setOpen(true)}>
         <BsQuestionCircle />
-        <p className="ml-2">{"Improve Score"}</p>
+        <p className="ml-2">{"How to Improve Score"}</p>
       </button>
       {open && (
         <ClientOnlyPortal selector="#modal">

@@ -78,14 +78,15 @@ function bonusScoringTiles() {
     );
   } else {
     return (
-      <div className="flex flex-col items-center justify-center mt-8">
-        <img src="/empty.png" alt="No Protocol Scores" className="h-64" />
-        <p className="mt-6 text-xl font-semibold">
-          {"No match with any protocol"}
-        </p>
-        <p className="mb-6 font-light">
-          {"You don't fit in any protocol based scoring criteria"}
-        </p>
+      <div className="box flex items-center justify-between w-full mt-8">
+        <div>
+          <p className="text font-semibold">
+            {"No match with any protocol"}
+          </p>
+          <p className="text-sm font-light">
+            {"You don't fit in any protocol based scoring criteria"}
+          </p>
+        </div>
         <ProtocolScoreModal />
       </div>
     );
@@ -105,7 +106,7 @@ const Scoring = () => {
           </p>
         </div>
         <button className="btn flex items-center justify-between">
-          <BsStars/>
+          <BsStars />
           <p className="ml-2">{"Mint your Score NFT"}</p>
         </button>
       </div>
