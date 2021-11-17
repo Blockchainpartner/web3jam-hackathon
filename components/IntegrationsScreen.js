@@ -1,21 +1,30 @@
 import React from "react";
+import SyntaxHighlighter from "react-syntax-highlighter/dist/esm/default-highlight";
 import { getLorem } from "../utils/utils";
 
 function getScoreTile() {
+  const code =
+    '<button className="btn flex items-center">\n<img src="/logo-icon-white.png" alt="dyFactor" className="mr-2 h-4" />\n{"Access with dyFactor Score"}\n</button>';
   return (
     <div className="box">
       {/* <p className="font-semibold">{"Example"}</p> */}
       <div className="mt-4 grid grid-cols-3 gap-4">
-        <div className="col-span-2">code</div>
+        <div className="col-span-2">
+          <SyntaxHighlighter language="js">{code}</SyntaxHighlighter>
+        </div>
         <div className="bg-white relative p-4 rounded pb-16">
           <div>
             <p className="font-semibold text-lg font-serif">{"Web3 Times"}</p>
             <p className="text-sm mt-2 font-serif">{getLorem()}</p>
           </div>
-          <div className="fade" />
-          <div className="absolute bottom-0 py-6 flex items-center justify-center w-full right-0 left-0 bg-white">
+          <div className="fade rounded" />
+          <div className="absolute bottom-0 py-6 flex items-center justify-center w-full right-0 left-0 bg-white rounded">
             <button className="btn flex items-center">
-              <img src="/logo-icon-white.png" alt="dyFactor" className="mr-2 h-4" />
+              <img
+                src="/logo-icon-white.png"
+                alt="dyFactor"
+                className="mr-2 h-4"
+              />
               {"Access with dyFactor Score"}
             </button>
           </div>
