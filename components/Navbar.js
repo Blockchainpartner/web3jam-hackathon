@@ -1,6 +1,7 @@
 import { useWeb3React } from "@web3-react/core";
 import { useRouter } from "next/dist/client/router";
 import React from "react";
+import Link from "next/link";
 
 const Navbar = () => {
   const context = useWeb3React();
@@ -9,14 +10,15 @@ const Navbar = () => {
   return (
     <div className="w-full flex items-center justify-between">
       <div className="flex items-center justify-start">
-        <img
-          src="/logo.png"
-          alt="dyFactor - Home"
-          className="h-10 cursor-pointer"
-          onClick={() => router.push("/")}
-        />
+        <Link href="/">
+          <img
+            src="/logo.png"
+            alt="dyFactor - Home"
+            className="h-10 cursor-pointer"
+          />
+        </Link>
         <div className="grid grid-rows-1 grid-cols-3 xl:gap-10 gap-6 ml-8 xl:ml-14">
-          <a href="/integrations">Integrations</a>
+          <Link href="/integrations">Integrations</Link>
           <a href="/tech">How it works</a>
           <a href="/about">About</a>
         </div>
