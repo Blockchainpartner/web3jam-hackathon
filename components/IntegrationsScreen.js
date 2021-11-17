@@ -3,6 +3,27 @@ import SyntaxHighlighter from "react-syntax-highlighter/dist/esm/default-highlig
 import { shadesOfPurple } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { getLorem, INTEGRATION_CODE } from "../utils/utils";
 
+const integrations = {
+  unlock: {
+    title: "Unlock's Memebership Access",
+    details:
+      "Grants special access with respect to a thereshold score defined by the lock creator",
+    img: "/banners/int-unlock.jpg",
+  },
+  aave: {
+    title: "Better lending rates on Aave's money market",
+    details:
+      "Grants you interesting borrowing rates with a good enough score and lending bonuses",
+    img: "/banners/int-aave.jpeg",
+  },
+  discord: {
+    title: "Discord engagement airdrop system",
+    details:
+      "Grants you a score to verify if you can claim an airdrop thourgh Discord or get whitelisted",
+    img: "/banners/int-discord.jpg",
+  },
+};
+
 function getScoreTile() {
   const [hideContent, setHideContent] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -14,10 +35,10 @@ function getScoreTile() {
     }, 2000);
   };
   return (
-    <div className="box">
+    <div className="box py-6">
       {/* <p className="font-semibold">{"Example"}</p> */}
-      <div className="mt-4 grid grid-cols-3 gap-4">
-        <div className="col-span-2">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+        <div className="xl:col-span-2">
           <SyntaxHighlighter
             language="js"
             style={shadesOfPurple}
@@ -29,6 +50,13 @@ function getScoreTile() {
           </SyntaxHighlighter>
         </div>
         <div className="bg-white relative p-4 rounded pb-16">
+          <button
+            className="absolute btn text-xs disabled:cursor-not-allowed disabled:opacity-20 top-2 right-2"
+            disabled={hideContent}
+            onClick={() => setHideContent(true)}
+          >
+            {"RETRY"}
+          </button>
           <div>
             <p className="font-semibold text-lg font-serif">{"Web3 Times"}</p>
             <p className="text-sm mt-2 font-serif">{getLorem()}</p>
@@ -58,6 +86,24 @@ function getScoreTile() {
   );
 }
 
+function getIntegrations() {
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 items-start">
+      {Object.keys(integrations).map((key) => (
+        <div key={key} className="flex flex-col items-start cursor-not-allowed">
+          <img
+            src={integrations[key].img}
+            alt={key}
+            className="object-cover h-48 w-full"
+          />
+          <h6 className="font-semibold mt-2">{integrations[key].title}</h6>
+          <p className="text-gtxt mt-1">{integrations[key].details}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 const IntegrationsScreen = () => {
   return (
     <div className="w-full xl:w-5/6 m-auto my-16">
@@ -82,6 +128,16 @@ const IntegrationsScreen = () => {
           </p>
         </div>
         <div className="mt-6">{getScoreTile()}</div>
+      </div>
+
+      <div className="mt-10">
+        <div className="flex flex-col items-start">
+          <h6 className="font-semibold">{"Other Integration Examples"}</h6>
+          <p className="font-medium text-sm text-subtxt">
+            {"Multiple possible use-cases to be integrated with dyFactor"}
+          </p>
+        </div>
+        <div className="mt-6">{getIntegrations()}</div>
       </div>
     </div>
   );
