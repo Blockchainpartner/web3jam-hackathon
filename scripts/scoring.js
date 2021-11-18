@@ -1,23 +1,8 @@
 const axios = require('axios').default;
 var Web3 = require('web3');
 
-// import ENS, { getEnsAddress } from '@ensdomains/ensjs';
-
-// var accounts = ethereum.enable();
-// var web3 = new Web3(ethereum);
-
-// 0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B vb
-// 0x96Df52cc3f98855b107342566941D34e908aD448
-
-
-//TESTNET KOVAN - 42
-
 const chainID = 1;
 const api_covalent = `https://api.covalenthq.com/v1/${chainID}/address`;
-const API_KEY = "ckey_0c9b908d2a0a4ccdb386f0300c8";
-const ADDRESS = "0x96Df52cc3f98855b107342566941D34e908aD448";
-const ADDRESS_WAWA = "0xa408ddd1bea8f798449e79c0e8a25d8b301e526b";
-const API_NFTPORT = "a087f39c-3561-4f92-90e2-b71fcf6c5cec"
 
 
 //###################### USER BALANCE / TOKENS #############################
@@ -170,7 +155,7 @@ async function getNFTs(address){
 
     try{
         let res = await axios.request(options)
-        return (res.data.nfts)
+        return res.data.nfts.length
     }
     catch(e){
         console.log(e)
@@ -206,22 +191,21 @@ async function computeScore(address) {
     
     let compInteractionScore = await getCompoundInteractions(address);
 
+    let NFTScore = await getNFTs(address)
 
     // let ensScore = await hasENS(address);
-    score += scamTokenScore + govTokenScore + aaveGovScore + compInteractionScore;
+    score += scamTokenScore + govTokenScore + aaveGovScore + compInteractionScore + NFTScore;
     return {
         total_score: score,
         scam_score: scamTokenScore,
         governance_score: govTokenScore,
         aave_votes: aaveGovScore,
         compound_interactions: compInteractionScore,
-        // scam_score: scamTokenScore,
+        NFT_score: NFTScore,
         // governance_score: govTokenScore
 
     }
 }
-
-// callAPI_Compound = "https://api.covalenthq.com/v1/1/address/0x96Df52cc3f98855b107342566941D34e908aD448/stacks/compound/acts/?key=ckey_0c9b908d2a0a4ccdb386f0300c8"
 
 async function main(address){
 
@@ -233,8 +217,8 @@ async function main(address){
     // let res4 = await getCompoundInteractions(address)
     // let res5 = await hasENS(address);
     // let res6 = await getScamTokens(address, res).then(r => console.log(r));
-    // computeScore(address).then(r => console.log(r));
-    getNFTs(address).then(r => console.log(r))
+    computeScore(address).then(r => console.log(r));
+    // getNFTs(address).then(r => console.log(r.counter))
 }
 //0xc17cb209d5abdb2d00f566a1e48f558debc264e1 aave gov
 main(ADDRESS)

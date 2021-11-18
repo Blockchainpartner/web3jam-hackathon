@@ -4,7 +4,6 @@ const fs = require('fs');
 const FormData = require('form-data');
 
 
-const API_NFTPORT = "a087f39c-3561-4f92-90e2-b71fcf6c5cec"
 //contract owner
 const ADDRESS_NFT = "0x432075C8Ba667C724e15Ec7dB20A5f2441679a6f"
 //contract address, deployed using deployContract()
