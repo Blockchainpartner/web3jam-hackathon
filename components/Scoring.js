@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import useScoring, {
   BonusScoreCriteria,
   BonusScoreCriteriaDetails,
@@ -10,10 +10,11 @@ import { BiInfoCircle } from "react-icons/bi";
 import { BsStars } from "react-icons/bs";
 import Meter from "./Meter";
 import ProtocolScoreModal from "./modals/ProtocolScoreModal";
+import { useWeb3React } from "@web3-react/core";
 
 function baseScoringTiles() {
-  const context = useScoring();
-  const { scoring, scoringValues } = context;
+  const scoreContext = useScoring();
+  const { scoring, scoringValues, scoreFetch } = scoreContext;
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:grid-rows-2 gap-4">
       <div className="box md:col-span-2 lg:col-span-3 xl:col-span-1 xl:row-span-2 px-8 py-6">
@@ -80,9 +81,7 @@ function bonusScoringTiles() {
     return (
       <div className="box flex items-center justify-between w-full mt-8">
         <div>
-          <p className="text font-semibold">
-            {"No match with any protocol"}
-          </p>
+          <p className="text font-semibold">{"No match with any protocol"}</p>
           <p className="text-sm font-light">
             {"You don't fit in any protocol based scoring criteria"}
           </p>
@@ -94,6 +93,16 @@ function bonusScoringTiles() {
 }
 
 const Scoring = () => {
+  const scoreContext = useScoring();
+  const { scoreFetch } = scoreContext;
+
+  const web3Context = useWeb3React();
+  const { account, chainId } = web3Context;
+
+  useEffect(() => {
+    scoreFetch(account, chainId);
+  }, [account, chainId]);
+
   return (
     <div className="w-full xl:w-5/6 m-auto my-16">
       <div className="flex justify-between items-start">

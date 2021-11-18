@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, createContext } from "react";
+import React, { useEffect, useContext, createContext, useCallback } from "react";
 import { MdOutlineAccountBalanceWallet } from "react-icons/md";
 import { GiToken, GiDominoMask } from "react-icons/gi";
 import {
@@ -6,6 +6,8 @@ import {
   RiFileCodeLine,
   RiExchangeBoxLine,
 } from "react-icons/ri";
+import { computeScore } from "../actions/scoring";
+import { useWeb3React } from "@web3-react/core";
 
 export const ScoreCriteria = {
   cumulativeBalance: "Cumulative Balance",
@@ -42,7 +44,7 @@ export const BonusScoreCriteriaDetails = {
   ens: "You own an ENS domain linked to your address",
 };
 
-export const ScoreCriteriaIcon = (criteria) => {
+export function ScoreCriteriaIcon(criteria) {
   switch (criteria) {
     case "cumulativeBalance":
       return (
@@ -62,6 +64,14 @@ export const ScoreCriteriaIcon = (criteria) => {
       return null;
   }
 };
+
+export function scoreMark(score) {
+  if (score === 0) return "Empty Wallet?";
+  if (score <= 100 && score > 0) return "Entry Level";
+  if (score <= 500 && score > 100) return "Healthy Score";
+  if (score <= 800 && score > 500) return "Excellent!";
+  else return "Perfect Score";
+}
 
 const Scoring = createContext();
 
@@ -95,13 +105,20 @@ export const ScoringContextApp = ({ children }) => {
     },
   };
 
-  function scoreMark(score) {
-    if (score === 0) return "Empty Wallet?";
-    if (score <= 100 && score > 0) return "Entry Level";
-    if (score <= 500 && score > 100) return "Healthy Score";
-    if (score <= 800 && score > 500) return "Excellent!";
-    else return "Perfect Score";
-  }
+  const scoreFetch = useCallback(async (address, chainId) => {
+    const score = await computeScore(address, chainId);
+    return score;
+  }, []);
+
+  // const scoreContext = useScoring();
+  // const { scoreFetch } = scoreContext;
+
+  // const web3Context = useWeb3React();
+  // const { account, chainId } = web3Context;
+
+  // useEffect(() => {
+  //   scoreFetch(account, chainId);
+  // }, [account, chainId]);
 
   return (
     <Scoring.Provider
@@ -109,6 +126,7 @@ export const ScoringContextApp = ({ children }) => {
         scoring,
         scoreMark,
         scoringValues,
+        scoreFetch,
       }}
     >
       {children}

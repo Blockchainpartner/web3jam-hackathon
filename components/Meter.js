@@ -1,9 +1,7 @@
 import React from "react";
-import useScoring from "../contexts/scoringContext";
+import { scoreMark } from "../contexts/scoringContext";
 
 const Meter = ({ score }) => {
-  const context = useScoring();
-  const { scoreMark } = context;
   return (
     <div className="mt-6">
       <p className="text-gtxt">{scoreMark(score)}</p>
