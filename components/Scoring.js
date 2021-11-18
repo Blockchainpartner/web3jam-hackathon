@@ -10,11 +10,10 @@ import { BiInfoCircle } from "react-icons/bi";
 import { BsStars } from "react-icons/bs";
 import Meter from "./Meter";
 import ProtocolScoreModal from "./modals/ProtocolScoreModal";
-import { useWeb3React } from "@web3-react/core";
 
 function baseScoringTiles() {
-  const scoreContext = useScoring();
-  const { scoring, scoringValues, scoreFetch } = scoreContext;
+  const context = useScoring();
+  const { scoring, scoringValues, loaded } = context;
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:grid-rows-2 gap-4">
       <div className="box md:col-span-2 lg:col-span-3 xl:col-span-1 xl:row-span-2 px-8 py-6">
@@ -22,14 +21,24 @@ function baseScoringTiles() {
           <p className="font-medium text-gtxt mr-2">{"Your Score"}</p>
           <BiInfoCircle className="text-gtxt" />
         </span>
-        <h2 className="font-extrabold text-ablack mt-2">{scoring.score}</h2>
-        <Meter score={scoring.score} />
+        <h2
+          className={`font-extrabold text-ablack mt-2 ${
+            loaded ? "" : "animate-pulse opacity-50"
+          }`}
+        >
+          {scoring.score}
+        </h2>
+        <Meter score={scoring.score} loaded />
       </div>
       {Object.keys(ScoreCriteria).map((key) => {
-        const positiveScore = scoring.baseScore[key] > 0;
+        const positiveScore = scoring.baseScore[key] >= 0;
         return (
           <div key={key} className="box flex items-start gap-4 relative">
-            <div className="w-1/4 h-full bg-gray-300 rounded flex items-center justify-center">
+            <div
+              className={`w-1/4 h-full bg-gray-300 rounded flex items-center justify-center ${
+                loaded ? "" : "animate-pulse"
+              }`}
+            >
               {ScoreCriteriaIcon(key)}
             </div>
             <div>
@@ -50,7 +59,7 @@ function baseScoringTiles() {
 
 function bonusScoringTiles() {
   const context = useScoring();
-  const { scoring, scoringValues } = context;
+  const { scoring, scoringValues, loaded } = context;
   if (scoring.protocolScoring) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -77,6 +86,12 @@ function bonusScoringTiles() {
         ))}
       </div>
     );
+  } else if (!loaded) {
+    return (
+      <div className="w-full mt-4 flex items-center justify-center">
+        <div className="donutSpinner" />
+      </div>
+    );
   } else {
     return (
       <div className="box flex items-center justify-between w-full mt-8">
@@ -92,17 +107,21 @@ function bonusScoringTiles() {
   }
 }
 
+function mintNftButton() {
+  const context = useScoring();
+  const { loaded } = context;
+  return (
+    <button
+      className="btn flex items-center justify-between disabled:cursor-not-allowed disabled:opacity-30"
+      disabled={!loaded}
+    >
+      <BsStars />
+      <p className="ml-2">{"Mint your Score NFT"}</p>
+    </button>
+  );
+}
+
 const Scoring = () => {
-  const scoreContext = useScoring();
-  const { scoreFetch } = scoreContext;
-
-  const web3Context = useWeb3React();
-  const { account, chainId } = web3Context;
-
-  useEffect(() => {
-    scoreFetch(account, chainId);
-  }, [account, chainId]);
-
   return (
     <div className="w-full xl:w-5/6 m-auto my-16">
       <div className="flex justify-between items-start">
@@ -114,10 +133,7 @@ const Scoring = () => {
             }
           </p>
         </div>
-        <button className="btn flex items-center justify-between">
-          <BsStars />
-          <p className="ml-2">{"Mint your Score NFT"}</p>
-        </button>
+        {mintNftButton()}
       </div>
       <div className="mt-10">
         <div className="flex flex-col items-start">

@@ -1,4 +1,10 @@
-import React, { useEffect, useContext, createContext, useCallback } from "react";
+import React, {
+  useEffect,
+  useContext,
+  createContext,
+  useCallback,
+  useState,
+} from "react";
 import { MdOutlineAccountBalanceWallet } from "react-icons/md";
 import { GiToken, GiDominoMask } from "react-icons/gi";
 import {
@@ -63,7 +69,7 @@ export function ScoreCriteriaIcon(criteria) {
     default:
       return null;
   }
-};
+}
 
 export function scoreMark(score) {
   if (score === 0) return "Empty Wallet?";
@@ -73,60 +79,88 @@ export function scoreMark(score) {
   else return "Perfect Score";
 }
 
+/**************************************************************************
+ **	Default states for scoring and scoringValues
+ **************************************************************************/
+const defaultScoring = {
+  score: 0,
+  baseScore: {
+    cumulativeBalance: 0,
+    txFreq: 0,
+    tokenHoldings: 0,
+    govTokenHoldings: 0,
+    smartContractInteractions: 0,
+    scamTokenHoldings: 0,
+  },
+  protocolScore: {},
+};
+
+const defaultScoringValues = {
+  baseScore: {
+    cumulativeBalance: 0,
+    txFreq: 0,
+    tokenHoldings: 0,
+    govTokenHoldings: 0,
+    smartContractInteractions: 0,
+    scamTokenHoldings: 0,
+  },
+  protocolScore: {},
+};
+
 const Scoring = createContext();
 
 export const ScoringContextApp = ({ children }) => {
-  const scoring = {
-    score: 687,
-    baseScore: {
-      cumulativeBalance: 50,
-      txFreq: 30,
-      tokenHoldings: 25,
-      govTokenHoldings: 34,
-      smartContractInteractions: 55,
-      scamTokenHoldings: -20,
-    },
-    protocolScore: {
-      ens: 200,
-    },
-  };
+  const web3Context = useWeb3React();
+  const { account, chainId } = web3Context;
+  const [scoring, setScoring] = useState(defaultScoring);
+  const [scoringValues, setScoringValues] = useState(defaultScoringValues);
+  const [loaded, setLoaded] = useState(false);
 
-  const scoringValues = {
-    baseScore: {
-      cumulativeBalance: 2439,
-      txFreq: 2.3,
-      tokenHoldings: 7,
-      govTokenHoldings: 2,
-      smartContractInteractions: 11,
-      scamTokenHoldings: 1,
-    },
-    protocolScore: {
-      ens: "0xwassim.eth",
-    },
-  };
-
-  const scoreFetch = useCallback(async (address, chainId) => {
+  /**************************************************************************
+   **	Fetches scoring data and updates context state scoring and scoringValues
+   **************************************************************************/
+  async function updateScoring(address, chainId) {
     const score = await computeScore(address, chainId);
-    return score;
-  }, []);
+    if(score){
+      setScoring({
+        score: score.total_score,
+        baseScore: {
+          cumulativeBalance: 0,
+          txFreq: 0,
+          tokenHoldings: 0,
+          govTokenHoldings: 0,
+          smartContractInteractions: 0,
+          scamTokenHoldings: 0,
+        },
+      });
+      setScoringValues({
+        baseScore: {
+          cumulativeBalance: 0,
+          txFreq: 0,
+          tokenHoldings: 0,
+          govTokenHoldings: 0,
+          smartContractInteractions: 0,
+          scamTokenHoldings: score.scam_score,
+        },
+        protocolScore: {},
+      });
+      setLoaded(true);
+    }
+  }
 
-  // const scoreContext = useScoring();
-  // const { scoreFetch } = scoreContext;
-
-  // const web3Context = useWeb3React();
-  // const { account, chainId } = web3Context;
-
-  // useEffect(() => {
-  //   scoreFetch(account, chainId);
-  // }, [account, chainId]);
+  useEffect(() => {
+    if (account) {
+      setLoaded(false);
+      updateScoring(account, chainId);
+    }
+  }, [account, chainId]);
 
   return (
     <Scoring.Provider
       value={{
         scoring,
-        scoreMark,
         scoringValues,
-        scoreFetch,
+        loaded,
       }}
     >
       {children}
