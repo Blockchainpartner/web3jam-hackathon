@@ -16,7 +16,7 @@ const chainID = 1;
 const api_covalent = `https://api.covalenthq.com/v1/${chainID}/address`;
 const API_KEY = "ckey_0c9b908d2a0a4ccdb386f0300c8";
 const ADDRESS = "0x96Df52cc3f98855b107342566941D34e908aD448";
-const ADDRESS_WAWA = "0xa408ddd1bea8f798449e79c0e8a25d8b301e526b";
+const ADDRESS_TEST = "0xc57eae20FB36cF3B72c2D07b8a86a99f78F5f9eB";
 const API_NFTPORT = "a087f39c-3561-4f92-90e2-b71fcf6c5cec"
 
 
