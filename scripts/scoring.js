@@ -158,9 +158,23 @@ async function hasENS(address){
  * @returns {number of NFTs owned by address} int
  */
 async function getNFTs(address){
-    const ens = new ENS({ provider, ensAddress: getEnsAddress('1') })
-    let names = await ens.getNames(address).then(r => console.log(r));
-    
+    const options = {
+    method: 'GET',
+    url: `https://api.nftport.xyz/v0/accounts/${address}`,
+    params: {chain: 'ethereum'},
+    headers: {
+        'Content-Type': 'application/json',
+        Authorization: API_NFTPORT
+    }
+    };
+
+    try{
+        let res = await axios.request(options)
+        return (res.data.nfts)
+    }
+    catch(e){
+        console.log(e)
+    }
 }
 
 async function getZapperNFT(address) {
@@ -219,7 +233,8 @@ async function main(address){
     // let res4 = await getCompoundInteractions(address)
     // let res5 = await hasENS(address);
     // let res6 = await getScamTokens(address, res).then(r => console.log(r));
-    computeScore(address).then(r => console.log(r));
+    // computeScore(address).then(r => console.log(r));
+    getNFTs(address).then(r => console.log(r))
 }
 //0xc17cb209d5abdb2d00f566a1e48f558debc264e1 aave gov
 main(ADDRESS)
