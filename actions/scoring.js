@@ -104,6 +104,30 @@ async function hasENS(address) {
 
 //###################### NFTs #############################
 
+/**
+ * @abstract 
+ * @param {user address} address 
+ * @returns {number of NFTs owned by address} int
+ */
+async function getNFTs(address){
+  const options = {
+  method: 'GET',
+  url: `https://api.nftport.xyz/v0/accounts/${address}`,
+  params: {chain: 'ethereum'},
+  headers: {
+      'Content-Type': 'application/json',
+      Authorization: API_NFTPORT
+  }
+  };
+
+  try{
+      let res = await axios.request(options)
+      return res.data.nfts.length
+  }
+  catch(e){
+      console.log(e)
+  }
+}
 async function getZapperNFT(address) {}
 
 //###################### TOTAL SCORE #############################
@@ -117,15 +141,18 @@ export async function computeScore(address, chainId) {
   const aaveGovScore = await getAaveGovernanceVotes(address);
   const compInteractionScore = await getCompoundInteractions(address, chainId);
   // let ensScore = await hasENS(address);
+  const NFTScore = await getNFTs(address)
 
-  score += -scamTokenScore + govTokenScore + aaveGovScore + compInteractionScore;
+  // let ensScore = await hasENS(address);
+  score += -scamTokenScore + govTokenScore + aaveGovScore + compInteractionScore + NFTScore;
   return {
-    total_score: score,
-    scam_score: scamTokenScore,
-    governance_score: govTokenScore,
-    aave_votes: aaveGovScore,
-    compound_interactions: compInteractionScore,
-    // scam_score: scamTokenScore,
-    // governance_score: govTokenScore
-  };
+      total_score: score,
+      scam_score: scamTokenScore,
+      governance_score: govTokenScore,
+      aave_votes: aaveGovScore,
+      compound_interactions: compInteractionScore,
+      NFT_score: NFTScore,
+      // governance_score: govTokenScore
+
+  }
 }
