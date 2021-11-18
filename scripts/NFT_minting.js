@@ -77,6 +77,7 @@ let uploadImage = async function () {
       console.error(error);
     });
 }
+
 let imgResponse = {
     "response": "OK",
     "ipfs_url": "https://ipfs.io/ipfs/Qmew7RWnByXhsF89TbkhXRzdaYJdk96fbcmmRtbJfDq2XT",
@@ -91,7 +92,8 @@ let imgResponse = {
  * 
  * @param {json of scores} scores 
  */
-let uploadNFTMetadata = async function (addr,scores) {
+
+ let uploadNFTMetadata = async function (addr,scores) {
 
     data_struct = {
         address: addr,
@@ -106,22 +108,25 @@ let uploadNFTMetadata = async function (addr,scores) {
       },
       data: {
         name: 'dyFactor Score',
-        file_url: 'https://ipfs.io/ipfs/Qmew7RWnByXhsF89TbkhXRzdaYJdk96fbcmmRtbJfDq2XT'
-        
+        description: 'score',
+        file_url: 'https://ipfs.io/ipfs/Qmew7RWnByXhsF89TbkhXRzdaYJdk96fbcmmRtbJfDq2XT',
+        custom_fields: data_struct,
       }
     };
     
-    axios.request(options).then(function (response) {
-      console.log(response);
-    })
+    let res = await axios.request(options)
+    return res.data.metadata_uri
+
 }
 
+/**
+ * 
+ * @param {user address. NFT is minted to addr} addr 
+ * @param {scores breakdown json. Supposed to be returned by computeScore() from scoring.js} scores 
+ */
 let mintToken = async (addr, scores) => {
     
-    //upload metadata for addr.scores
-    let response = await uploadNFTMetadata(addr, scores);
-    let metadatasURI = await response.metadata_uri;
-
+    let metadatasURI = await uploadNFTMetadata(addr, scores);
 
     const options = {
         method: 'POST',
@@ -139,22 +144,10 @@ let mintToken = async (addr, scores) => {
       };
       
       axios.request(options).then(function (response) {
-        console.log(response.data);
+        console.log(response);
       }).catch(function (error) {
         console.error(error);
       });
 }
 
-
-
-let main = async () => {
-    //deployContract()
-    // getContractAddress().then(r => console.log(r))
-    // uploadImage()
-    // mintToken(ADDRESS_NFT, [600])
-    uploadNFTMetadata(ADDRESS_NFT, {address: ADDRESS_NFT, scores: 600})
-
-}
-main()
-// deployContract()
 
