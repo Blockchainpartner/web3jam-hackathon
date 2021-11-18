@@ -5,16 +5,7 @@ import Scoring from "../components/Scoring";
 
 export default function Home() {
   const context = useWeb3React();
-  const {
-    connector,
-    library,
-    chainId,
-    account,
-    activate,
-    deactivate,
-    active,
-    error,
-  } = context;
+  const { active } = context;
   return (
     <div className="flex flex-col justify-center">
       {active ? (
