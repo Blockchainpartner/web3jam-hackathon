@@ -53,11 +53,22 @@ async function getAllTokenBalances(address, chainId) {
   }
 }
 
-async function getUSDBalance(address) {
-  let balanceArray = await getAllTokenBalances(address);
+async function getUSDBalance(tokenList) {
+  let balanceArray = tokenList;
   let result = 0;
   for (let obj in balanceArray) {
     result += balanceArray[obj].USD;
+  }
+  return result;
+}
+
+async function getQuantityOfTokens(tokenList) {
+  let balanceArray = tokenList;
+  let result = 0;
+  for (let obj in balanceArray) {
+    if(balanceArray[obj].amount != 0){
+      result += 1;
+    }
   }
   return result;
 }
@@ -137,7 +148,9 @@ async function getRawValues(address, chainId) {
   //get token list
   const tokenList = await getAllTokenBalances(address, chainId);
   //get values
-  const USDBalance = await getUSDBalance(address);
+  const USDBalance = await getUSDBalance(tokenList);
+  const tokenHoldingsRaw = await getQuantityOfTokens(tokenList);
+
   const scamTokenScore = await getScamTokens(tokenList);
   const govTokenScore = await getGovernanceTokens(tokenList);
   const aaveGovScore = await getAaveGovernanceVotes(address);
@@ -146,6 +159,7 @@ async function getRawValues(address, chainId) {
 
   return {
       usd_balance: USDBalance,
+      token_holdings_raw: tokenHoldingsRaw,
       scam_raw: scamTokenScore,
       governance_raw: govTokenScore,
       aave_votes_raw: aaveGovScore,
@@ -157,7 +171,7 @@ async function getRawValues(address, chainId) {
 async function computeScoreFromRaw(rawValues) {
   let score = BASE_SCORE;
   //get scores
-  const USDScore = 0;
+  let USDScore = 0;
   if(rawValues.usd_balance <= 100){
     USDScore = 10;
   }
@@ -170,15 +184,18 @@ async function computeScoreFromRaw(rawValues) {
   else if(rawValues.usd_balance > 10000){
     USDScore = 75
   }
+  const tokenHoldingsScore = rawValues.token_holdings_raw * 10;
   const scamTokenScore = rawValues.scam_raw * 10;
   const govTokenScore = rawValues.governance_raw * 10;
   const aaveGovScore = rawValues.aave_votes_raw * 10;
   const compInteractionScore = rawValues.compInteractionScore_raw * 10;
   const NFTScore = rawValues.NFT_score_raw * 10;
 
-  score += -scamTokenScore + govTokenScore + aaveGovScore + compInteractionScore + NFTScore;
+  score += -scamTokenScore + govTokenScore + aaveGovScore + compInteractionScore + NFTScore + USDScore + tokenHoldingsScore;
   return {
       total_score: score,
+      usd_score: USDScore,
+      token_holdings_score: tokenHoldingsScore,
       scam_score: scamTokenScore,
       governance_score: govTokenScore,
       aave_votes: aaveGovScore,
@@ -193,6 +210,14 @@ export async function computeScore(address, chainId) {
   // let ensScore = await hasENS(address);
   return {
       total_score: scores.total_score,
+      usd: {
+        value: rawScores.usd_balance,
+        score: scores.usd_score
+      },
+      token_holdings: {
+        value: rawScores.token_holdings_raw,
+        score: scores.token_holdings_score
+      },
       scam: {
         value: rawScores.scam_raw,
         score: scores.scam_score
