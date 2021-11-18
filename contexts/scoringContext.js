@@ -130,20 +130,20 @@ export const ScoringContextApp = ({ children }) => {
         score: score.total_score,
         baseScore: {
           cumulativeBalance: 0,
-          txFreq: 0,
+          nftHoldings: 0,
           tokenHoldings: 0,
           govTokenHoldings: 0,
-          smartContractInteractions: 0,
+          compoundInteractions: 0,
           scamTokenHoldings: 0,
         },
       });
       setScoringValues({
         baseScore: {
           cumulativeBalance: 0,
-          txFreq: 0,
+          nftHoldings: 0,
           tokenHoldings: 0,
           govTokenHoldings: 0,
-          smartContractInteractions: 0,
+          compoundInteractions: 0,
           scamTokenHoldings: score.scam_score,
         },
         protocolScore: {},
