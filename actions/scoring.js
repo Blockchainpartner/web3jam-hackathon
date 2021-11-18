@@ -116,7 +116,7 @@ async function getNFTs(address){
   params: {chain: 'ethereum'},
   headers: {
       'Content-Type': 'application/json',
-      Authorization: API_NFTPORT
+      Authorization: process.env.NFTPORT_KEY
   }
   };
 

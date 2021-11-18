@@ -17,7 +17,7 @@ let deployContract = async () => {
     const options = {
         method: 'POST',
         headers: { 
-            'Authorization': API_NFTPORT
+            'Authorization': process.env.NFTPORT_KEY
         },
         data: {
             "chain": "rinkeby",
@@ -42,7 +42,7 @@ let getContractAddress = async function () {
     let options = {
         method: 'GET',
         headers: { 
-            'Authorization': API_NFTPORT
+            'Authorization': process.env.NFTPORT_KEY
         },
         url: `https://api.nftport.xyz/v0/contracts/${txHash}?chain=${chain}`,
     }
@@ -64,7 +64,7 @@ let uploadImage = async function () {
       url: 'https://api.nftport.xyz/v0/files',
       headers: {
         'Content-Type': 'multipart/form-data',
-        Authorization: API_NFTPORT,
+        Authorization: process.env.NFTPORT_KEY,
         'content-type': 'multipart/form-data; boundary=---011000010111000001101001'
       },
       data: '[form]'
@@ -103,7 +103,7 @@ let imgResponse = {
       url: 'https://api.nftport.xyz/v0/metadata',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: API_NFTPORT,
+        Authorization: process.env.NFTPORT_KEY,
       },
       data: {
         name: 'dyFactor Score',
@@ -123,7 +123,7 @@ let imgResponse = {
  * @param {user address. NFT is minted to addr} addr 
  * @param {scores breakdown json. Supposed to be returned by computeScore() from scoring.js} scores 
  */
-let mintToken = async (addr, scores) => {
+export async function mintToken(addr, scores) {
     
     let metadatasURI = await uploadNFTMetadata(addr, scores);
 
@@ -132,7 +132,7 @@ let mintToken = async (addr, scores) => {
         url: 'https://api.nftport.xyz/v0/mints/customizable',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: API_NFTPORT
+          Authorization: process.env.NFTPORT_KEY
         },
         data: {
           chain: 'rinkeby',
