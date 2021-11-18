@@ -188,7 +188,7 @@ async function computeScoreFromRaw(rawValues) {
   const scamTokenScore = rawValues.scam_raw * 10;
   const govTokenScore = rawValues.governance_raw * 10;
   const aaveGovScore = rawValues.aave_votes_raw * 10;
-  const compInteractionScore = rawValues.compInteractionScore_raw * 10;
+  const compInteractionScore = rawValues.compound_interactions_raw * 10;
   const NFTScore = rawValues.NFT_score_raw * 10;
 
   score += -scamTokenScore + govTokenScore + aaveGovScore + compInteractionScore + NFTScore + USDScore + tokenHoldingsScore;
