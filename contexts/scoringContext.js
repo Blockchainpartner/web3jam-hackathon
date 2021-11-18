@@ -140,7 +140,7 @@ export const ScoringContextApp = ({ children }) => {
       setScoringValues({
         baseScore: {
           cumulativeBalance: 0,
-          nftHoldings: 0,
+          nftHoldings: score.NFT_score,
           tokenHoldings: 0,
           govTokenHoldings: 0,
           compoundInteractions: 0,
