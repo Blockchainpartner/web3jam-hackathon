@@ -127,6 +127,11 @@ export const ScoringContextApp = ({ children }) => {
           compoundInteractions: score.compound.score,
           scamTokenHoldings: score.scam.score,
         },
+        protocolScore: {
+          aave: score.aave.score,
+          ens: score.ens.score,
+          zapper: score.zapper.score
+        }
       });
       setScoringValues({
         baseScore: {
@@ -138,7 +143,9 @@ export const ScoringContextApp = ({ children }) => {
           scamTokenHoldings: score.scam_score,
         },
         protocolScore: {
-          ens: score.ens.value.name
+          aave: score.aave.value,
+          ens: score.ens.value.name,
+          zapper: score.zapper.value
         },
       });
       setLoaded(true);

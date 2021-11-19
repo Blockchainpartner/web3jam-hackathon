@@ -60,50 +60,57 @@ function baseScoringTiles() {
 function bonusScoringTiles() {
   const context = useScoring();
   const { scoring, scoringValues, loaded } = context;
-  if (scoring.protocolScoring) {
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {Object.keys(scoring.protocolScore).map((key) => (
-          <div key={key} className="box">
-            <img
-              src={`/banners/${key}.png`}
-              alt={key}
-              className="rounded object-cover h-36 w-full"
-            />
-            <div className="mt-4">
-              <p className="font-semibold">{BonusScoreCriteria[key]}</p>
-              <p className="text-sm font-medium">
-                {BonusScoreCriteriaDetails[key]}
-              </p>
-              <span className="flex items-center justify-between">
-                <p className="text-sm font-light mt-1">
-                  {scoringValues.protocolScore[key]}
-                </p>
-                <p className="font-semibold text-2xl text-success">{`+${scoring.protocolScore[key]}`}</p>
-              </span>
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-  } else if (!loaded) {
+  const displayCondition = Object.keys(scoring.protocolScore).some(
+    (key) => scoring.protocolScore[key] > 0
+  );
+  if (!loaded) {
     return (
       <div className="w-full mt-4 flex items-center justify-center">
         <div className="donutSpinner" />
       </div>
     );
   } else {
-    return (
-      <div className="box flex items-center justify-between w-full mt-8">
-        <div>
-          <p className="text font-semibold">{"No match with any protocol"}</p>
-          <p className="text-sm font-light">
-            {"You don't fit in any protocol based scoring criteria"}
-          </p>
+    if (displayCondition) {
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {Object.keys(scoring.protocolScore)
+            .filter((key) => scoring.protocolScore[key] > 0)
+            .map((key) => (
+              <div key={key} className="box">
+                <img
+                  src={`/banners/${key}.png`}
+                  alt={key}
+                  className="rounded object-cover h-36 w-full"
+                />
+                <div className="mt-4">
+                  <p className="font-semibold">{BonusScoreCriteria[key]}</p>
+                  <p className="text-sm font-medium">
+                    {BonusScoreCriteriaDetails[key]}
+                  </p>
+                  <span className="flex items-center justify-between">
+                    <p className="text-sm font-light mt-1">
+                      {scoringValues.protocolScore[key]}
+                    </p>
+                    <p className="font-semibold text-2xl text-success">{`+${scoring.protocolScore[key]}`}</p>
+                  </span>
+                </div>
+              </div>
+            ))}
         </div>
-        <ProtocolScoreModal />
-      </div>
-    );
+      );
+    } else {
+      return (
+        <div className="box flex items-center justify-between w-full mt-8">
+          <div>
+            <p className="text font-semibold">{"No match with any protocol"}</p>
+            <p className="text-sm font-light">
+              {"You don't fit in any protocol based scoring criteria"}
+            </p>
+          </div>
+          <ProtocolScoreModal />
+        </div>
+      );
+    }
   }
 }
 

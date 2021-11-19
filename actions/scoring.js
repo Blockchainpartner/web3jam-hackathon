@@ -288,7 +288,7 @@ export async function computeScore(address, chainId, provider) {
       value: data.ens,
       score: scores.ens_score,
     },
-    zapperNfts: {
+    zapper: {
         value: data.zapperNfts_raw,
         score: scores.zapperNfts_score,
       },
