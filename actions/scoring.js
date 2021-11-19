@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios from "axios";
 
 import { toast } from "react-toastify";
 import ENS, { getEnsAddress } from "@ensdomains/ensjs";
@@ -66,7 +66,7 @@ async function getQuantityOfTokens(tokenList) {
   let balanceArray = tokenList;
   let result = 0;
   for (let obj in balanceArray) {
-    if(balanceArray[obj].amount != 0){
+    if (balanceArray[obj].amount != 0) {
       result += 1;
     }
   }
@@ -76,7 +76,7 @@ async function getQuantityOfTokens(tokenList) {
 async function getScamTokens(tokenList) {
   return tokenList
     .map((token) => token.token)
-    .filter((t) => SCAM_TOKENS.includes(t)).length;
+    .filter((t) => SCAM_TOKENS.includes(t));
 }
 
 //###################### GOVERNANCE SCORE #############################
@@ -84,24 +84,24 @@ async function getScamTokens(tokenList) {
 // for the hackaton, tokens = ENS + aave/stkAave + Comp + CRV
 
 async function getGovernanceTokens(tokenList) {
-    return tokenList
+  return tokenList
     .map((token) => token.token)
-    .filter((t) => GOV_TOKENS.includes(t)).length;
+    .filter((t) => GOV_TOKENS.includes(t));
 }
 
 async function getAaveGovernanceVotes(address) {
   const response = await axios.get(AAVEGOV_URI(address));
   let score = 0;
   if (response.data != null) {
-    score = response.data.votingHistory.length;
+    score = response.data.votingHistory;
   }
   return score;
 }
 
-async function getCompoundInteractions(address, chainId) {
+async function getCompInteractions(address, chainId) {
   try {
     const response = await axios.get(COMPOUND_URI(address, chainId));
-    return response.data.data.items.length;
+    return response.data.data.items;
   } catch (e) {
     console.log("Error fetching Compound data: " + e);
     // toast.error("Error fetching Compound data. See console.");
@@ -116,73 +116,87 @@ async function hasENS(address) {
 
 //###################### NFTs #############################
 
-/**
- * @abstract 
- * @param {user address} address 
- * @returns {number of NFTs owned by address} int
- */
-async function getNFTs(address){
+async function getNfts(address) {
   const options = {
-  method: 'GET',
-  url: `https://api.nftport.xyz/v0/accounts/${address}`,
-  params: {chain: 'ethereum'},
-  headers: {
-      'Content-Type': 'application/json',
-      Authorization: process.env.NFTPORT_KEY
-  }
+    method: "GET",
+    url: `https://api.nftport.xyz/v0/accounts/${address}`,
+    params: { chain: "ethereum" },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: process.env.NFTPORT_KEY,
+    },
   };
 
-  try{
-      let res = await axios.request(options)
-      return res.data.nfts.length
-  }
-  catch(e){
-      console.log(e)
+  try {
+    let res = await axios.request(options);
+    return res.data.nfts;
+  } catch (e) {
+    console.log(e);
   }
 }
 async function getZapperNFT(address) {}
 
 //###################### TOTAL SCORE #############################
 
-async function getRawValues(address, chainId) {
-  //get token list
+async function getData(address, chainId) {
+  // Base Score
   const tokenList = await getAllTokenBalances(address, chainId);
-  //get values
-  const USDBalance = await getUSDBalance(tokenList);
-  const tokenHoldingsRaw = await getQuantityOfTokens(tokenList);
+  const usdBalance = await getUSDBalance(tokenList);
+  const scamTokens = await getScamTokens(tokenList);
+  const govTokens = await getGovernanceTokens(tokenList);
+  const compInteractions = await getCompInteractions(address, chainId);
+  const nfts = await getNfts(address);
 
-  const scamTokenScore = await getScamTokens(tokenList);
-  const govTokenScore = await getGovernanceTokens(tokenList);
-  const aaveGovScore = await getAaveGovernanceVotes(address);
-  const compInteractionScore = await getCompoundInteractions(address, chainId);
-  const NFTScore = await getNFTs(address)
+  // Protocol Score
+  const aaveVotes = await getAaveGovernanceVotes(address);
 
   return {
-      usd_balance: USDBalance,
-      token_holdings_raw: tokenHoldingsRaw,
-      scam_raw: scamTokenScore,
-      governance_raw: govTokenScore,
-      aave_votes_raw: aaveGovScore,
-      compound_interactions_raw: compInteractionScore,
-      NFT_score_raw: NFTScore,
-  }
+    usdBalance,
+    tokenList,
+    scamTokens,
+    govTokens,
+    compInteractions,
+    nfts,
+    aaveVotes,
+  };
+}
+
+async function getRawValues(address, chainId) {
+  const data = await getData(address, chainId);
+  const {
+    // base
+    usdBalance,
+    tokenList,
+    scamTokens,
+    govTokens,
+    compInteractions,
+    nfts,
+    // protocols
+    aaveVotes,
+  } = data;
+  return {
+    usd_balance: usdBalance,
+    token_holdings_raw: tokenList.length,
+    scam_raw: scamTokens.length,
+    governance_raw: govTokens.length,
+    compound_interactions_raw: compInteractions.length,
+    NFT_score_raw: nfts.length,
+    aave_votes_raw: aaveVotes,
+  };
 }
 
 async function computeScoreFromRaw(rawValues) {
   let score = BASE_SCORE;
   //get scores
   let USDScore = 0;
-  if(rawValues.usd_balance <= 100){
+  if (rawValues.usd_balance <= 100) {
     USDScore = 10;
-  }
-  else if(rawValues.usd_balance > 100 && rawValues.usd_balance <= 1000){
-    USDScore = 20
-  }
-  else if(rawValues.usd_balance > 1000 && rawValues.usd_balance <= 10000){
-    USDScore = 50
-  }
-  else if(rawValues.usd_balance > 10000){
-    USDScore = 75
+  } else if (rawValues.usd_balance > 100 && rawValues.usd_balance <= 1000) {
+    USDScore = 20;
+  } else if (rawValues.usd_balance > 1000 && rawValues.usd_balance <= 10000) {
+    USDScore = 50;
+  } else if (rawValues.usd_balance > 10000) {
+    USDScore = 75;
   }
   const tokenHoldingsScore = rawValues.token_holdings_raw * 10;
   const scamTokenScore = rawValues.scam_raw * 10;
@@ -191,55 +205,60 @@ async function computeScoreFromRaw(rawValues) {
   const compInteractionScore = rawValues.compound_interactions_raw * 10;
   const NFTScore = rawValues.NFT_score_raw * 10;
 
-  score += -scamTokenScore + govTokenScore + aaveGovScore + compInteractionScore + NFTScore + USDScore + tokenHoldingsScore;
+  score +=
+    -scamTokenScore +
+    govTokenScore +
+    aaveGovScore +
+    compInteractionScore +
+    NFTScore +
+    USDScore +
+    tokenHoldingsScore;
   return {
-      total_score: score,
-      usd_score: USDScore,
-      token_holdings_score: tokenHoldingsScore,
-      scam_score: scamTokenScore,
-      governance_score: govTokenScore,
-      aave_votes: aaveGovScore,
-      compound_interactions: compInteractionScore,
-      NFT_score: NFTScore,
-  }
+    total_score: score,
+    usd_score: USDScore,
+    token_holdings_score: tokenHoldingsScore,
+    scam_score: scamTokenScore,
+    governance_score: govTokenScore,
+    aave_votes: aaveGovScore,
+    compound_interactions: compInteractionScore,
+    NFT_score: NFTScore,
+  };
 }
 
 export async function computeScore(address, chainId) {
-  let rawScores = await getRawValues(address, chainId);
-  console.log("RAW", rawScores)
-  let scores = await computeScoreFromRaw(rawScores);
-  // let ensScore = await hasENS(address);
+//   const data = await getData(address, chainId);
+  const rawScores = await getRawValues(address, chainId);
+  const scores = await computeScoreFromRaw(rawScores);
   return {
-      total_score: scores.total_score,
-      usd: {
-        value: rawScores.usd_balance,
-        score: scores.usd_score
-      },
-      token_holdings: {
-        value: rawScores.token_holdings_raw,
-        score: scores.token_holdings_score
-      },
-      scam: {
-        value: rawScores.scam_raw,
-        score: scores.scam_score
-      },
-      governance: {
-        value: rawScores.governance_raw,
-        score: scores.governance_score
-      },
-      aave: {
-        value: rawScores.aave_votes_raw,
-        score: scores.aave_votes
-      },
-      compound: {
-        value: rawScores.compound_interactions_raw,
-        score: scores.compound_interactions
-      },
-      nft: {
-        value: rawScores.NFT_score_raw,
-        score: scores.NFT_score
-      },
-      // governance_score: govTokenScore
-
-  }
+    total_score: scores.total_score,
+    usd: {
+      value: rawScores.usd_balance,
+      score: scores.usd_score,
+    },
+    token_holdings: {
+      value: rawScores.token_holdings_raw,
+      score: scores.token_holdings_score,
+    },
+    scam: {
+      value: rawScores.scam_raw,
+      score: scores.scam_score,
+    },
+    governance: {
+      value: rawScores.governance_raw,
+      score: scores.governance_score,
+    },
+    aave: {
+      value: rawScores.aave_votes_raw,
+      score: scores.aave_votes,
+    },
+    compound: {
+      value: rawScores.compound_interactions_raw,
+      score: scores.compound_interactions,
+    },
+    nft: {
+      value: rawScores.NFT_score_raw,
+      score: scores.NFT_score,
+    },
+    // governance_score: govTokenScore
+  };
 }
