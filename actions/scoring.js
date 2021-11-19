@@ -206,6 +206,7 @@ async function computeScoreFromRaw(rawValues) {
 
 export async function computeScore(address, chainId) {
   let rawScores = await getRawValues(address, chainId);
+  console.log("RAW", rawScores)
   let scores = await computeScoreFromRaw(rawScores);
   // let ensScore = await hasENS(address);
   return {

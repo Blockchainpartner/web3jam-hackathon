@@ -1,17 +1,8 @@
-import React, {
-  useEffect,
-  useContext,
-  createContext,
-  useCallback,
-  useState,
-} from "react";
+import React, { useEffect, useContext, createContext, useState } from "react";
 import { MdOutlineAccountBalanceWallet } from "react-icons/md";
-import { GiToken, GiDominoMask } from "react-icons/gi";
-import {
-  RiGovernmentLine,
-  RiFileCodeLine,
-  RiExchangeBoxLine,
-} from "react-icons/ri";
+import { GiToken, GiDominoMask, GiPayMoney } from "react-icons/gi";
+import { CgCardHearts } from "react-icons/cg";
+import { RiGovernmentLine } from "react-icons/ri";
 import { computeScore } from "../actions/scoring";
 import { useWeb3React } from "@web3-react/core";
 
@@ -61,13 +52,13 @@ export function ScoreCriteriaIcon(criteria) {
         <MdOutlineAccountBalanceWallet size={40} className="text-ablack" />
       );
     case "nftHoldings":
-      return <RiExchangeBoxLine size={40} className="text-ablack" />;
+      return <CgCardHearts size={40} className="text-ablack" />;
     case "tokenHoldings":
       return <GiToken size={40} className="text-ablack" />;
     case "govTokenHoldings":
       return <RiGovernmentLine size={40} className="text-ablack" />;
     case "compoundInteractions":
-      return <RiFileCodeLine size={40} className="text-ablack" />;
+      return <GiPayMoney size={40} className="text-ablack" />;
     case "scamTokenHoldings":
       return <GiDominoMask size={40} className="text-ablack" />;
     default:
