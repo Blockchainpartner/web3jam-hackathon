@@ -139,7 +139,10 @@ async function getNfts(address) {
     console.log(e);
   }
 }
-async function getZapperNFT(address) {}
+
+async function getZapperNfts(nfts) {
+  return nfts.filter(nft => nft.contract_address === ZAPPER_CONTRACT);
+}
 
 //###################### TOTAL SCORE #############################
 
@@ -155,6 +158,7 @@ async function getData(address, chainId, provider) {
   // Protocol Score
   const aaveVotes = await getAaveGovernanceVotes(address);
   const ens = await getEns(address, provider);
+  const zapperNfts = await getZapperNfts(nfts);
 
   return {
     usdBalance,
@@ -165,6 +169,7 @@ async function getData(address, chainId, provider) {
     nfts,
     aaveVotes,
     ens,
+    zapperNfts
   };
 }
 
@@ -181,6 +186,7 @@ async function getRawValues(address, chainId, provider) {
     // protocols
     aaveVotes,
     ens,
+    zapperNfts
   } = data;
   return {
     usd_balance: usdBalance,
@@ -191,6 +197,7 @@ async function getRawValues(address, chainId, provider) {
     NFT_score_raw: nfts.length,
     aave_votes_raw: aaveVotes,
     ens_raw: ens.name,
+    zapperNfts_raw: zapperNfts.length
   };
 }
 
@@ -210,27 +217,34 @@ async function computeScoreFromRaw(rawValues) {
   const tokenHoldingsScore = rawValues.token_holdings_raw * 10;
   const scamTokenScore = rawValues.scam_raw * 10;
   const govTokenScore = rawValues.governance_raw * 10;
-  const aaveGovScore = rawValues.aave_votes_raw * 10;
   const compInteractionScore = rawValues.compound_interactions_raw * 10;
   const NFTScore = rawValues.NFT_score_raw * 10;
+  // TODO: check if good scoring
+  const aaveGovScore = rawValues.aave_votes_raw * 10;
+  const ensScore = rawValues.ens_raw ? 100 : 0;
+  const zapperNftsScore = rawValues.zapperNfts_raw * 50;
 
   score +=
     -scamTokenScore +
     govTokenScore +
-    aaveGovScore +
     compInteractionScore +
     NFTScore +
     USDScore +
-    tokenHoldingsScore;
+    tokenHoldingsScore +
+    aaveGovScore +
+    ensScore +
+    zapperNftsScore;
   return {
     total_score: score,
     usd_score: USDScore,
     token_holdings_score: tokenHoldingsScore,
     scam_score: scamTokenScore,
     governance_score: govTokenScore,
-    aave_votes: aaveGovScore,
     compound_interactions: compInteractionScore,
     NFT_score: NFTScore,
+    aave_votes: aaveGovScore,
+    ens_score: ensScore,
+    zapperNfts_score: zapperNftsScore
   };
 }
 
@@ -272,7 +286,11 @@ export async function computeScore(address, chainId, provider) {
     },
     ens: {
       value: data.ens,
-      score: data.ens,
+      score: scores.ens_score,
     },
+    zapperNfts: {
+        value: data.zapperNfts_raw,
+        score: scores.zapperNfts_score,
+      },
   };
 }
