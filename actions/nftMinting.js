@@ -1,5 +1,7 @@
 import axios from "axios";
+import { ethers } from "ethers";
 import { FormData } from "form-data";
+import { toast } from "react-toastify";
 
 //contract owner
 const ADDRESS_NFT = "0x432075C8Ba667C724e15Ec7dB20A5f2441679a6f";
@@ -19,84 +21,13 @@ const IMAGE_RESPONSE = {
   file_size_mb: 0.0018,
   error: null,
 };
-/**
- * @abstract function that deploys a NFT smart-contract using NFTPort API.
- */
-let deployContract = async () => {
-  //params of the API call.
-  const options = {
-    method: "POST",
-    headers: {
-      Authorization: process.env.NFTPORT_KEY,
-    },
-    data: {
-      chain: "rinkeby",
-      name: "DYFACTOR",
-      symbol: "DFC",
-      owner_address: ADDRESS_NFT,
-    },
-    url: "https://api.nftport.xyz/v0/contracts",
-  };
-  axios(options)
-    .then(function (response) {
-      console.log(response);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-};
-
-let getContractAddress = async function () {
-  let txHash = CONTRACT_DEPLOYMENT_TXHASH;
-  let chain = "rinkeby";
-  let options = {
-    method: "GET",
-    headers: {
-      Authorization: process.env.NFTPORT_KEY,
-    },
-    url: `https://api.nftport.xyz/v0/contracts/${txHash}?chain=${chain}`,
-  };
-  try {
-    let res = await axios(options).then((r) => console.log(r));
-    return res.data.contract_address;
-  } catch (e) {
-    console.log(e);
-  }
-};
-
-let uploadImage = async function () {
-  const form = new FormData();
-  form.append("file", "logo.png");
-
-  const options = {
-    method: "POST",
-    url: "https://api.nftport.xyz/v0/files",
-    headers: {
-      "Content-Type": "multipart/form-data",
-      Authorization: process.env.NFTPORT_KEY,
-      "content-type":
-        "multipart/form-data; boundary=---011000010111000001101001",
-    },
-    data: "[form]",
-  };
-
-  axios
-    .request(options)
-    .then(function (response) {
-      console.log(response.data);
-    })
-    .catch(function (error) {
-      console.error(error);
-    });
-};
 
 /**
  *
  * @param {json of scores} scores
  */
-
-let uploadNFTMetadata = async function (addr, scores) {
-  data_struct = {
+async function uploadNFTMetadata(addr, scores) {
+  const data_struct = {
     address: addr,
     scores: scores,
   };
@@ -117,7 +48,27 @@ let uploadNFTMetadata = async function (addr, scores) {
 
   let res = await axios.request(options);
   return res.data.metadata_uri;
-};
+}
+
+export async function retreiveTokenId(txHash) {
+  const options = {
+    method: "GET",
+    url: `https://api.nftport.xyz/v0/mints/${txHash}`,
+    params: { chain: "rinkeby" },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: process.env.NFTPORT_KEY,
+    },
+  };
+
+  try {
+    let res = await axios.request(options);
+    return res.data;
+  } catch (e) {
+    console.error(e);
+    toast.error("Retreiving NFT ID not working. See console.");
+  }
+}
 
 /**
  *
@@ -142,12 +93,11 @@ export async function mintToken(addr, scores) {
     },
   };
 
-  axios
-    .request(options)
-    .then(function (response) {
-      console.log(response);
-    })
-    .catch(function (error) {
-      console.error(error);
-    });
+  try {
+    let res = await axios.request(options);
+    return res.data;
+  } catch (e) {
+    console.error(e);
+    toast.error("Mint not working. See console.");
+  }
 }

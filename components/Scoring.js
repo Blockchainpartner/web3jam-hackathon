@@ -10,6 +10,8 @@ import { BiInfoCircle } from "react-icons/bi";
 import { BsStars } from "react-icons/bs";
 import Meter from "./Meter";
 import ProtocolScoreModal from "./modals/ProtocolScoreModal";
+import useNft from "../contexts/nftContext";
+import { useWeb3React } from "@web3-react/core";
 
 function baseScoringTiles() {
   const context = useScoring();
@@ -115,15 +117,24 @@ function bonusScoringTiles() {
 }
 
 function mintNftButton() {
-  const context = useScoring();
-  const { loaded } = context;
+  const web3Context = useWeb3React();
+  const scoringContext = useScoring();
+  const nftContext = useNft();
+
+  const { account } = web3Context;
+  const { scoring, loaded } = scoringContext;
+  const { mintNftFromScore, loading } = nftContext;
+
   return (
     <button
       className="btn flex items-center justify-between disabled:cursor-not-allowed disabled:opacity-30"
-      disabled={!loaded}
+      disabled={!loaded || loading}
+      onClick={() => mintNftFromScore(account, scoring)}
     >
-      <BsStars />
-      <p className="ml-2">{"Mint your Score NFT"}</p>
+      {loading ? <div className="donutSpinner h-4 w-4" /> : <BsStars />}
+      <p className="ml-2">
+        {loading ? "Minting Score NFT ..." : "Mint your Score NFT"}
+      </p>
     </button>
   );
 }
