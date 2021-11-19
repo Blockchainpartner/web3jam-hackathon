@@ -2,11 +2,11 @@ import { useWeb3React } from "@web3-react/core";
 import { useRouter } from "next/dist/client/router";
 import React from "react";
 import Link from "next/link";
+import { MdBolt, MdOutlineAccountBalanceWallet } from "react-icons/md";
 
 const Navbar = () => {
   const context = useWeb3React();
-  const { account, network } = context;
-  const router = useRouter();
+  const { account, chainId } = context;
   return (
     <div className="w-full flex items-center justify-between">
       <div className="flex items-center justify-start">
@@ -26,22 +26,30 @@ const Navbar = () => {
       {account ? (
         <div className="flex items-center justify-end gap-2">
           <div className="box px-4 py-2 h-9 flex items-center justify-center">
-            <span className="text-sm font-medium">
+            <MdOutlineAccountBalanceWallet size={20} />
+            <span className="ml-2 text-sm font-medium">
               {`${account.substring(0, 6)}...${account.substring(
                 account.length - 4
               )}`}
             </span>
           </div>
-          <div className="box px-4 py-2 h-9 flex items-center justify-center">
-            <span className="flex items-center justify-between">
-              <img
-                src="/icons/bsc.png"
-                alt="BSC"
-                className="rounded-full h-4 w-4"
-              />
-              <p className="ml-3 font-medium text-sm">{"BSC Mainnet"}</p>
-            </span>
-          </div>
+          {chainId === 4 ? (
+            <div className="box px-4 py-2 h-9 flex items-center justify-center">
+              <span className="flex items-center justify-between">
+                <MdBolt size={20} />
+                <p className="ml-1 font-medium text-sm">{"Rinkeby"}</p>
+              </span>
+            </div>
+          ) : (
+            <div className="box px-4 py-2 h-9 flex items-center justify-center bg-danger">
+              <span className="flex items-center justify-between">
+                <MdBolt className="text-white" size={20} />
+                <p className="text-white ml-1 font-semibold text-sm">
+                  {"Wrong Network!"}
+                </p>
+              </span>
+            </div>
+          )}
         </div>
       ) : null}
     </div>
