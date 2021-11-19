@@ -256,7 +256,7 @@ export async function computeScore(address, chainId, provider) {
     // Base Score
     total_score: scores.total_score,
     usd: {
-      value: rawScores.usd_balance,
+      value: rawScores.usd_balance.toFixed(2),
       score: scores.usd_score,
     },
     token_holdings: {
