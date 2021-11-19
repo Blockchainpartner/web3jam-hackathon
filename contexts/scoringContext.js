@@ -34,7 +34,7 @@ export const ScoreCriteriaDetails = {
 };
 
 export const ScoreCriteriaLabels = {
-  cumulativeBalance: "ETH",
+  cumulativeBalance: "USD",
   nftHoldings: "NFTs",
   tokenHoldings: "tokens",
   govTokenHoldings: "gov tokens",
@@ -129,21 +129,21 @@ export const ScoringContextApp = ({ children }) => {
       setScoring({
         score: score.total_score,
         baseScore: {
-          cumulativeBalance: 0,
-          nftHoldings: 0,
-          tokenHoldings: 0,
-          govTokenHoldings: 0,
-          compoundInteractions: 0,
-          scamTokenHoldings: 0,
+          cumulativeBalance: score.usd.score,
+          nftHoldings: score.nft.score,
+          tokenHoldings: score.token_holdings.score,
+          govTokenHoldings: score.governance.score,
+          compoundInteractions: score.compound.score,
+          scamTokenHoldings: score.scam.score,
         },
       });
       setScoringValues({
         baseScore: {
-          cumulativeBalance: 0,
-          nftHoldings: score.NFT_score,
-          tokenHoldings: 0,
-          govTokenHoldings: 0,
-          compoundInteractions: 0,
+          cumulativeBalance: score.usd.value,
+          nftHoldings: score.nft.value,
+          tokenHoldings: score.token_holdings.value,
+          govTokenHoldings: score.governance.value,
+          compoundInteractions: score.compound.value,
           scamTokenHoldings: score.scam_score,
         },
         protocolScore: {},
