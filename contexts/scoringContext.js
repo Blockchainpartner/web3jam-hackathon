@@ -25,7 +25,7 @@ export const ScoreCriteriaDetails = {
 };
 
 export const ScoreCriteriaLabels = {
-  cumulativeBalance: "ETH",
+  cumulativeBalance: "USD",
   nftHoldings: "NFTs",
   tokenHoldings: "tokens",
   govTokenHoldings: "gov tokens",
@@ -49,18 +49,18 @@ export function ScoreCriteriaIcon(criteria) {
   switch (criteria) {
     case "cumulativeBalance":
       return (
-        <MdOutlineAccountBalanceWallet size={40} className="text-ablack" />
+        <MdOutlineAccountBalanceWallet size={30} className="text-ablack" />
       );
     case "nftHoldings":
-      return <CgCardHearts size={40} className="text-ablack" />;
+      return <CgCardHearts size={30} className="text-ablack" />;
     case "tokenHoldings":
-      return <GiToken size={40} className="text-ablack" />;
+      return <GiToken size={30} className="text-ablack" />;
     case "govTokenHoldings":
-      return <RiGovernmentLine size={40} className="text-ablack" />;
+      return <RiGovernmentLine size={30} className="text-ablack" />;
     case "compoundInteractions":
-      return <GiPayMoney size={40} className="text-ablack" />;
+      return <GiPayMoney size={30} className="text-ablack" />;
     case "scamTokenHoldings":
-      return <GiDominoMask size={40} className="text-ablack" />;
+      return <GiDominoMask size={30} className="text-ablack" />;
     default:
       return null;
   }
