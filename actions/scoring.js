@@ -3,6 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import ENS, { getEnsAddress } from "@ensdomains/ensjs";
 import Web3 from "web3";
+import { ethers } from "ethers";
 
 const SCAM_TOKENS = ["FF9.io", "🧙‍♂️WIZ🧙‍♂️"];
 const GOV_TOKENS = ["ENS", "AAVE", "stkAAVE", "COMP", "CRV"];
@@ -109,9 +110,13 @@ async function getCompInteractions(address, chainId) {
 }
 
 //###################### ENS #############################
-async function hasENS(address) {
+export async function getEns(address) {
+  const provider = new ethers.providers.JsonRpcProvider(
+    "https://mainnet.infura.io/v3/" + process.env.INFURA_ID
+  );
   const ens = new ENS({ provider, ensAddress: getEnsAddress("1") });
-  const names = await ens.getNames(address).then((r) => console.log(r));
+  const name = await ens.getName(address);
+  return name;
 }
 
 //###################### NFTs #############################
@@ -138,7 +143,7 @@ async function getZapperNFT(address) {}
 
 //###################### TOTAL SCORE #############################
 
-async function getData(address, chainId) {
+async function getData(address, chainId, provider) {
   // Base Score
   const tokenList = await getAllTokenBalances(address, chainId);
   const usdBalance = await getUSDBalance(tokenList);
@@ -149,6 +154,7 @@ async function getData(address, chainId) {
 
   // Protocol Score
   const aaveVotes = await getAaveGovernanceVotes(address);
+  const ens = await getEns(address, provider);
 
   return {
     usdBalance,
@@ -158,11 +164,12 @@ async function getData(address, chainId) {
     compInteractions,
     nfts,
     aaveVotes,
+    ens,
   };
 }
 
-async function getRawValues(address, chainId) {
-  const data = await getData(address, chainId);
+async function getRawValues(address, chainId, provider) {
+  const data = await getData(address, chainId, provider);
   const {
     // base
     usdBalance,
@@ -173,6 +180,7 @@ async function getRawValues(address, chainId) {
     nfts,
     // protocols
     aaveVotes,
+    ens,
   } = data;
   return {
     usd_balance: usdBalance,
@@ -182,6 +190,7 @@ async function getRawValues(address, chainId) {
     compound_interactions_raw: compInteractions.length,
     NFT_score_raw: nfts.length,
     aave_votes_raw: aaveVotes,
+    ens_raw: ens.name,
   };
 }
 
@@ -225,11 +234,12 @@ async function computeScoreFromRaw(rawValues) {
   };
 }
 
-export async function computeScore(address, chainId) {
-//   const data = await getData(address, chainId);
-  const rawScores = await getRawValues(address, chainId);
+export async function computeScore(address, chainId, provider) {
+  const data = await getData(address, chainId, provider);
+  const rawScores = await getRawValues(address, chainId, provider);
   const scores = await computeScoreFromRaw(rawScores);
   return {
+    // Base Score
     total_score: scores.total_score,
     usd: {
       value: rawScores.usd_balance,
@@ -247,10 +257,6 @@ export async function computeScore(address, chainId) {
       value: rawScores.governance_raw,
       score: scores.governance_score,
     },
-    aave: {
-      value: rawScores.aave_votes_raw,
-      score: scores.aave_votes,
-    },
     compound: {
       value: rawScores.compound_interactions_raw,
       score: scores.compound_interactions,
@@ -259,6 +265,14 @@ export async function computeScore(address, chainId) {
       value: rawScores.NFT_score_raw,
       score: scores.NFT_score,
     },
-    // governance_score: govTokenScore
+    // Protocol Score
+    aave: {
+      value: rawScores.aave_votes_raw,
+      score: scores.aave_votes,
+    },
+    ens: {
+      value: data.ens,
+      score: data.ens,
+    },
   };
 }
