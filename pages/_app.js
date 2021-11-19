@@ -17,6 +17,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
 import { ScoringContextApp } from "../contexts/scoringContext";
 import { NftContextApp } from "../contexts/nftContext";
+import { NftProvider } from "use-nft";
 
 function getErrorMessage(error) {
   if (error instanceof NoEthereumProviderError) {
@@ -42,31 +43,33 @@ function getLibrary(provider) {
 
 const AppWrapper = ({ Component, pageProps }) => {
   const context = useWeb3React();
-  const { error, connector } = context;
+  const { error, connector, provider } = context;
   useEffect(() => {
     if (error) {
       toast.error(getErrorMessage(error));
     }
   }, [error]);
   return (
-    <main
-      className="w-5/6 pt-10 m-auto flex flex-col"
-      style={{ minHeight: "100vh" }}
-    >
-      <ToastContainer
-        position="bottom-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover={false}
-      />
-      <Navbar />
-      <Component {...pageProps} />
-    </main>
+    <NftProvider fetcher={["ethers", {provider}]}>
+      <main
+        className="w-5/6 pt-10 m-auto flex flex-col"
+        style={{ minHeight: "100vh" }}
+      >
+        <ToastContainer
+          position="bottom-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover={false}
+        />
+        <Navbar />
+        <Component {...pageProps} />
+      </main>
+    </NftProvider>
   );
 };
 

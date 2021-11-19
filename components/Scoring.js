@@ -10,7 +10,7 @@ import { BiInfoCircle } from "react-icons/bi";
 import { BsStars } from "react-icons/bs";
 import Meter from "./Meter";
 import ProtocolScoreModal from "./modals/ProtocolScoreModal";
-import useNft from "../contexts/nftContext";
+import useNftContext from "../contexts/nftContext";
 import { useWeb3React } from "@web3-react/core";
 import NftModal from "./modals/NftModal";
 
@@ -120,7 +120,7 @@ function bonusScoringTiles() {
 function mintNftButton() {
   const web3Context = useWeb3React();
   const scoringContext = useScoring();
-  const nftContext = useNft();
+  const nftContext = useNftContext();
 
   const { account } = web3Context;
   const { scoring, loaded } = scoringContext;
@@ -141,8 +141,8 @@ function mintNftButton() {
 }
 
 const Scoring = () => {
-  const nftContext = useNft();
-  const { nft } = nftContext;
+  const nftContext = useNftContext();
+  const { nftId } = nftContext;
   return (
     <div className="w-full xl:w-5/6 m-auto my-16">
       <div className="flex justify-between items-start">
@@ -154,7 +154,7 @@ const Scoring = () => {
             }
           </p>
         </div>
-        {nft ? <NftModal /> : mintNftButton()}
+        {nftId ? <NftModal /> : mintNftButton()}
       </div>
       <div className="mt-10">
         <div className="flex flex-col items-start">

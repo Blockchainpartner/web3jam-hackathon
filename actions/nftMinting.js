@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 //contract owner
 const ADDRESS_NFT = "0x432075C8Ba667C724e15Ec7dB20A5f2441679a6f";
 //contract address, deployed using deployContract()
-const CONTRACT_ADDRESS = "0xA368eeb3Da7148158771982D793825E9b553429D";
+export const NFT_CONTRACT_ADDRESS = "0xA368eeb3Da7148158771982D793825E9b553429D";
 
 const CONTRACT_DEPLOYMENT_TXHASH =
   "0x61f4eebfb09cb4eb0448416e80c1238653a3c80a07c52923c2e23ff6e5716a8b";
@@ -87,7 +87,7 @@ export async function mintToken(addr, scores) {
     },
     data: {
       chain: "rinkeby",
-      contract_address: CONTRACT_ADDRESS,
+      contract_address: NFT_CONTRACT_ADDRESS,
       metadata_uri: metadatasURI,
       mint_to_address: addr,
     },

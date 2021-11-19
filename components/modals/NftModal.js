@@ -1,20 +1,40 @@
 import { useWeb3React } from "@web3-react/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BsFillEyeFill } from "react-icons/bs";
-import useNft from "../../contexts/nftContext";
+import { NFT_CONTRACT_ADDRESS } from "../../actions/nftMinting";
+import useNftContext from "../../contexts/nftContext";
 import ClientOnlyPortal from "../ClientOnlyPortal";
+import { useNft } from "use-nft";
 
 export default function NftModal() {
   const [open, setOpen] = useState();
 
-  const nftContext = useNft();
-  const { nft } = nftContext;
+  const nftContext = useNftContext();
+  const { nftId } = nftContext;
+
+  const [stateNftId, setStateNftId] = useState("");
+
+  const { loading, error, nft, reload } = useNft(NFT_CONTRACT_ADDRESS, nftId);
+
+  console.log(error)
+
+//   useEffect(() => {
+//     if (nftId) {
+//       reload();
+//     }
+//   }, [nftId]);
+
+  //   // nft.loading is true during load.
+  //   if (loading) return <>Loading…</>
+
+  //   // nft.error is an Error instance in case of error.
+  //   if (error || !nft) return <>Error.</>
 
   return (
     <>
       <button className="btn" onClick={() => setOpen(true)}>
         <BsFillEyeFill className="text-white" />
-        <p className="ml-2">{`NFT ID: ${nft}`}</p>
+        <p className="ml-2">{`NFT ID: ${nftId}`}</p>
       </button>
       {open && (
         <ClientOnlyPortal selector="#modal">
@@ -49,6 +69,9 @@ export default function NftModal() {
                     </div>
                   ))}
                 </div> */}
+                {loading && <div className="donutSpinner h-4 w-4" />}
+                {nft && <div>{nft.owner}</div>}
+                {error && <div>{"ERROR "+error}</div>}
                 <button
                   type="button"
                   className="btn mt-4 w-full"
