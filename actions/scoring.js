@@ -55,7 +55,11 @@ async function getAllTokenBalances(address, chainId) {
 
 async function getUSDBalance(tokenList) {
   let balanceArray = tokenList;
-  return balanceArray.reduce((a, b) => a.USD + b.USD);
+  let result = 0;
+  for (let obj in balanceArray) {
+    result += balanceArray[obj].USD;
+  }
+  return result;
 }
 
 async function getQuantityOfTokens(tokenList) {
