@@ -12,6 +12,7 @@ import Meter from "./Meter";
 import ProtocolScoreModal from "./modals/ProtocolScoreModal";
 import useNft from "../contexts/nftContext";
 import { useWeb3React } from "@web3-react/core";
+import NftModal from "./modals/NftModal";
 
 function baseScoringTiles() {
   const context = useScoring();
@@ -140,6 +141,8 @@ function mintNftButton() {
 }
 
 const Scoring = () => {
+  const nftContext = useNft();
+  const { nft } = nftContext;
   return (
     <div className="w-full xl:w-5/6 m-auto my-16">
       <div className="flex justify-between items-start">
@@ -151,7 +154,7 @@ const Scoring = () => {
             }
           </p>
         </div>
-        {mintNftButton()}
+        {nft ? <NftModal /> : mintNftButton()}
       </div>
       <div className="mt-10">
         <div className="flex flex-col items-start">

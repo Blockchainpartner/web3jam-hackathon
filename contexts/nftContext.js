@@ -13,23 +13,24 @@ export const NftContextApp = ({ children }) => {
   const web3Context = useWeb3React();
   const { account } = web3Context;
 
-  const [nft, setNft] = useState("test");
+  const [nft, setNft] = useState();
   const [loading, setLoading] = useState(false);
 
   async function mintNftFromScore(address, scores) {
     setLoading(true);
     const mintData = await mintToken(address, scores);
     await setTimeout(async () => {
-      const tokenId = await retreiveTokenId(mintData.transaction_hash);
+      const nftData = await retreiveTokenId(mintData.transaction_hash);
+      setNft(nftData.token_id);
       setLoading(false);
     }, 15000);
   }
 
   async function updateNft() {}
 
-//   useEffect(() => {
-//     console.log("LOADER", loading);
-//   }, [loading]);
+  //   useEffect(() => {
+  //     console.log("LOADER", loading);
+  //   }, [loading]);
 
   return (
     <Nft.Provider
