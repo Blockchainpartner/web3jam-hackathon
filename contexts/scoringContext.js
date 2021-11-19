@@ -115,7 +115,7 @@ const Scoring = createContext();
 
 export const ScoringContextApp = ({ children }) => {
   const web3Context = useWeb3React();
-  const { account, chainId } = web3Context;
+  const { account } = web3Context;
   const [scoring, setScoring] = useState(defaultScoring);
   const [scoringValues, setScoringValues] = useState(defaultScoringValues);
   const [loaded, setLoaded] = useState(false);
@@ -155,9 +155,10 @@ export const ScoringContextApp = ({ children }) => {
   useEffect(() => {
     if (account) {
       setLoaded(false);
-      updateScoring(account, chainId);
+      // Setting default chainId to 1 for fetching scores on Ethereum Mainnet
+      updateScoring(account, 1);
     }
-  }, [account, chainId]);
+  }, [account]);
 
   return (
     <Scoring.Provider
