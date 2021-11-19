@@ -34,7 +34,7 @@ export const ScoreCriteriaDetails = {
 };
 
 export const ScoreCriteriaLabels = {
-  cumulativeBalance: "ETH",
+  cumulativeBalance: "USD",
   nftHoldings: "NFTs",
   tokenHoldings: "tokens",
   govTokenHoldings: "gov tokens",

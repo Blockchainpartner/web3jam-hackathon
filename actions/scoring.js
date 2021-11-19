@@ -48,18 +48,14 @@ async function getAllTokenBalances(address, chainId) {
 
     return balances;
   } catch (e) {
-    console.log("Error: " + e);
-    // toast.error("Couldn't fetch Covalent balances. See console.");
+    console.error(e);
+    toast.error("Couldn't fetch Covalent balances. See console.");
   }
 }
 
 async function getUSDBalance(tokenList) {
   let balanceArray = tokenList;
-  let result = 0;
-  for (let obj in balanceArray) {
-    result += balanceArray[obj].USD;
-  }
-  return result;
+  return balanceArray.reduce((a, b) => a.USD + b.USD);
 }
 
 async function getQuantityOfTokens(tokenList) {
@@ -103,8 +99,8 @@ async function getCompoundInteractions(address, chainId) {
     const response = await axios.get(COMPOUND_URI(address, chainId));
     return response.data.data.items.length;
   } catch (e) {
-    console.log("Error fetching Compound data: " + e);
-    // toast.error("Error fetching Compound data. See console.");
+    console.error(e);
+    toast.error("Error fetching Compound data. See console.");
   }
 }
 
@@ -137,7 +133,7 @@ async function getNFTs(address){
       return res.data.nfts.length
   }
   catch(e){
-      console.log(e)
+      console.error(e);
   }
 }
 async function getZapperNFT(address) {}
@@ -172,7 +168,7 @@ async function computeScoreFromRaw(rawValues) {
   let score = BASE_SCORE;
   //get scores
   let USDScore = 0;
-  if(rawValues.usd_balance <= 100){
+  if(rawValues.usd_balance > 0 && rawValues.usd_balance <= 100){
     USDScore = 10;
   }
   else if(rawValues.usd_balance > 100 && rawValues.usd_balance <= 1000){
