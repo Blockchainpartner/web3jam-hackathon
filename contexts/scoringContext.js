@@ -1,18 +1,9 @@
-import React, {
-  useEffect,
-  useContext,
-  createContext,
-  useCallback,
-  useState,
-} from "react";
+import React, { useEffect, useContext, createContext, useState } from "react";
 import { MdOutlineAccountBalanceWallet } from "react-icons/md";
-import { GiToken, GiDominoMask } from "react-icons/gi";
-import {
-  RiGovernmentLine,
-  RiFileCodeLine,
-  RiExchangeBoxLine,
-} from "react-icons/ri";
-import { computeScore } from "../actions/scoring";
+import { GiToken, GiDominoMask, GiPayMoney } from "react-icons/gi";
+import { CgCardHearts } from "react-icons/cg";
+import { RiGovernmentLine } from "react-icons/ri";
+import { computeScore, hasENS } from "../actions/scoring";
 import { useWeb3React } from "@web3-react/core";
 
 export const ScoreCriteria = {
@@ -58,18 +49,18 @@ export function ScoreCriteriaIcon(criteria) {
   switch (criteria) {
     case "cumulativeBalance":
       return (
-        <MdOutlineAccountBalanceWallet size={40} className="text-ablack" />
+        <MdOutlineAccountBalanceWallet size={30} className="text-ablack" />
       );
     case "nftHoldings":
-      return <RiExchangeBoxLine size={40} className="text-ablack" />;
+      return <CgCardHearts size={30} className="text-ablack" />;
     case "tokenHoldings":
-      return <GiToken size={40} className="text-ablack" />;
+      return <GiToken size={30} className="text-ablack" />;
     case "govTokenHoldings":
-      return <RiGovernmentLine size={40} className="text-ablack" />;
+      return <RiGovernmentLine size={30} className="text-ablack" />;
     case "compoundInteractions":
-      return <RiFileCodeLine size={40} className="text-ablack" />;
+      return <GiPayMoney size={30} className="text-ablack" />;
     case "scamTokenHoldings":
-      return <GiDominoMask size={40} className="text-ablack" />;
+      return <GiDominoMask size={30} className="text-ablack" />;
     default:
       return null;
   }
@@ -115,7 +106,7 @@ const Scoring = createContext();
 
 export const ScoringContextApp = ({ children }) => {
   const web3Context = useWeb3React();
-  const { account, chainId } = web3Context;
+  const { account, library } = web3Context;
   const [scoring, setScoring] = useState(defaultScoring);
   const [scoringValues, setScoringValues] = useState(defaultScoringValues);
   const [loaded, setLoaded] = useState(false);
@@ -123,8 +114,8 @@ export const ScoringContextApp = ({ children }) => {
   /**************************************************************************
    **	Fetches scoring data and updates context state scoring and scoringValues
    **************************************************************************/
-  async function updateScoring(address, chainId) {
-    const score = await computeScore(address, chainId);
+  async function updateScoring(address, chainId, library) {
+    const score = await computeScore(address, chainId, library);
     if (score) {
       setScoring({
         score: score.total_score,
@@ -136,6 +127,11 @@ export const ScoringContextApp = ({ children }) => {
           compoundInteractions: score.compound.score,
           scamTokenHoldings: score.scam.score,
         },
+        protocolScore: {
+          aave: score.aave.score,
+          ens: score.ens.score,
+          zapper: score.zapper.score
+        }
       });
       setScoringValues({
         baseScore: {
@@ -146,18 +142,29 @@ export const ScoringContextApp = ({ children }) => {
           compoundInteractions: score.compound.value,
           scamTokenHoldings: score.scam_score,
         },
-        protocolScore: {},
+        protocolScore: {
+          aave: score.aave.value,
+          ens: score.ens.name,
+          zapper: score.zapper.value
+        },
       });
       setLoaded(true);
     }
   }
 
   useEffect(() => {
-    if (account) {
+    if (library && account) {
       setLoaded(false);
-      updateScoring(account, chainId);
+      // Setting default chainId to 1 for fetching scores on Ethereum Mainnet
+      updateScoring(account, 1, library);
     }
-  }, [account, chainId]);
+  }, [account, library]);
+
+  useEffect(() => {
+    if (scoring) {
+      console.log(scoringValues)
+    }
+  }, [scoring]);
 
   return (
     <Scoring.Provider

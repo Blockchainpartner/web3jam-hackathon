@@ -1,39 +1,48 @@
 import { useWeb3React } from "@web3-react/core";
 import { useEffect, useState } from "react";
-import { BsQuestionCircle } from "react-icons/bs";
-import {
-  BonusScoreCriteria,
-  BonusScoreCriteriaDetails,
-} from "../../contexts/scoringContext";
+import { BsFillEyeFill } from "react-icons/bs";
+import { NFT_CONTRACT_ADDRESS } from "../../actions/nftMinting";
+import useNftContext from "../../contexts/nftContext";
 import ClientOnlyPortal from "../ClientOnlyPortal";
+import { useNft } from "use-nft";
 
-export default function ProtocolScoreModal() {
+export default function NftModal() {
   const [open, setOpen] = useState();
 
-  const context = useWeb3React();
-  const { connector, activate } = context;
+  const nftContext = useNftContext();
+  const { nftId } = nftContext;
 
-  // handle logic to recognize the connector currently being activated
-  const [activatingConnector, setActivatingConnector] = useState();
-  useEffect(() => {
-    if (activatingConnector && activatingConnector === connector) {
-      setActivatingConnector(undefined);
-    }
-  }, [activatingConnector, connector]);
+  const [stateNftId, setStateNftId] = useState("");
+
+  const { loading, error, nft, reload } = useNft(NFT_CONTRACT_ADDRESS, nftId);
+
+  console.log(error)
+
+//   useEffect(() => {
+//     if (nftId) {
+//       reload();
+//     }
+//   }, [nftId]);
+
+  //   // nft.loading is true during load.
+  //   if (loading) return <>Loading…</>
+
+  //   // nft.error is an Error instance in case of error.
+  //   if (error || !nft) return <>Error.</>
 
   return (
     <>
       <button className="btn" onClick={() => setOpen(true)}>
-        <BsQuestionCircle />
-        <p className="ml-2">{"How to Improve Score"}</p>
+        <BsFillEyeFill className="text-white" />
+        <p className="ml-2">{`NFT ID: ${nftId}`}</p>
       </button>
       {open && (
         <ClientOnlyPortal selector="#modal">
           <div className="backdrop flex items-center justify-center">
-            <div className="modal w-1/3 m-auto mb-4 p-0.5 bg-gradient-to-r from-brand1 to-brand2">
+            <div className="modal w-1/4 m-auto mb-4 p-0.5 bg-gradient-to-r from-brand1 to-brand2">
               <div className="bg-white px-8 py-6 rounded">
-                <h6 className="font-semibold">{"Score Improvement"}</h6>
-                <p className="text-gtxt mb-4">
+                <h6 className="font-semibold">{"Your Score NFT"}</h6>
+                {/* <p className="text-gtxt mb-4">
                   {
                     "To improve your bonus score you need to have interactions or assets from various protocols"
                   }
@@ -59,7 +68,10 @@ export default function ProtocolScoreModal() {
                       </div>
                     </div>
                   ))}
-                </div>
+                </div> */}
+                {loading && <div className="donutSpinner h-4 w-4" />}
+                {nft && <div>{nft.owner}</div>}
+                {error && <div>{"ERROR "+error}</div>}
                 <button
                   type="button"
                   className="btn mt-4 w-full"
