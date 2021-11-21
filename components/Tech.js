@@ -7,7 +7,7 @@ const Tech = () => {
       <div className="flex items-center justify-start gap-10">
         <img src="/tech/logo1.png" alt="Built around" />
         <img src="/tech/logo2.png" alt="Built around" />
-        <img src="/tech/logo3.png" alt="Built around" />
+        {/* <img src="/tech/logo3.png" alt="Built around" /> */}
         <img src="/tech/logo4.png" alt="Built around" />
       </div>
     </div>
