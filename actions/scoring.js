@@ -149,6 +149,7 @@ async function getZapperNfts(nfts) {
 async function getData(address, chainId, provider) {
   // Base Score
   const tokenList = await getAllTokenBalances(address, chainId);
+  const quantityOfTOkens = await getQuantityOfTokens(tokenList);
   const usdBalance = await getUSDBalance(tokenList);
   const scamTokens = await getScamTokens(tokenList);
   const govTokens = await getGovernanceTokens(tokenList);
@@ -163,6 +164,7 @@ async function getData(address, chainId, provider) {
   return {
     usdBalance,
     tokenList,
+    quantityOfTOkens,
     scamTokens,
     govTokens,
     compInteractions,
@@ -179,6 +181,7 @@ async function getRawValues(address, chainId, provider) {
     // base
     usdBalance,
     tokenList,
+    quantityOfTOkens,
     scamTokens,
     govTokens,
     compInteractions,
@@ -188,9 +191,10 @@ async function getRawValues(address, chainId, provider) {
     ens,
     zapperNfts
   } = data;
+  console.log(tokenList);
   return {
     usd_balance: usdBalance,
-    token_holdings_raw: tokenList.length,
+    token_holdings_raw: quantityOfTOkens,
     scam_raw: scamTokens.length,
     governance_raw: govTokens.length,
     compound_interactions_raw: compInteractions.length,
@@ -214,7 +218,7 @@ async function computeScoreFromRaw(rawValues) {
   } else if (rawValues.usd_balance > 10000) {
     USDScore = 75;
   }
-  const tokenHoldingsScore = rawValues.token_holdings_raw * 10;
+  const tokenHoldingsScore = rawValues.token_holdings_raw * 5;
   const scamTokenScore = rawValues.scam_raw * 10;
   const govTokenScore = rawValues.governance_raw * 10;
   const compInteractionScore = rawValues.compound_interactions_raw * 10;
