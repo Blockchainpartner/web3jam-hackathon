@@ -8,11 +8,13 @@ import useScoring, {
 } from "../contexts/scoringContext";
 import { BiInfoCircle } from "react-icons/bi";
 import { BsStars } from "react-icons/bs";
+import { RiExternalLinkFill } from "react-icons/ri";
 import Meter from "./Meter";
 import ProtocolScoreModal from "./modals/ProtocolScoreModal";
 import useNftContext from "../contexts/nftContext";
 import { useWeb3React } from "@web3-react/core";
 import NftModal from "./modals/NftModal";
+import Link from "next/link";
 
 function baseScoringTiles() {
   const context = useScoring();
@@ -140,6 +142,19 @@ function mintNftButton() {
   );
 }
 
+function seeNftButton(nftId) {
+  return (
+    <a
+      className="btn flex items-center justify-between disabled:cursor-not-allowed disabled:opacity-30"
+      target="_blank"
+      href={`https://rinkeby.etherscan.io/token/0xa368eeb3da7148158771982d793825e9b553429d?a=${nftId}`}
+    >
+      <RiExternalLinkFill />
+      <p className="ml-2">{`NFT ID: ${nftId}`}</p>
+    </a>
+  );
+}
+
 const Scoring = () => {
   const nftContext = useNftContext();
   const { nftId } = nftContext;
@@ -154,7 +169,7 @@ const Scoring = () => {
             }
           </p>
         </div>
-        {nftId ? <NftModal /> : mintNftButton()}
+        {nftId ? seeNftButton(nftId) : mintNftButton()}
       </div>
       <div className="mt-10">
         <div className="flex flex-col items-start">
