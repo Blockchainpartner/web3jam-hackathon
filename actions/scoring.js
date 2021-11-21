@@ -8,6 +8,7 @@ import { ethers } from "ethers";
 const SCAM_TOKENS = ["FF9.io", "🧙‍♂️WIZ🧙‍♂️"];
 const GOV_TOKENS = ["ENS", "AAVE", "stkAAVE", "COMP", "CRV"];
 const ZAPPER_CONTRACT = "0xf1f3ca6268f330fda08418db12171c3173ee39c9";
+const ENS_CONTRACT = "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85";
 const BASE_SCORE = 500;
 
 const AAVEGOV_URI = (address) =>
@@ -110,14 +111,14 @@ async function getCompInteractions(address, chainId) {
 }
 
 //###################### ENS #############################
-export async function getEns(address) {
-  const provider = new ethers.providers.JsonRpcProvider(
-    "https://mainnet.infura.io/v3/" + process.env.INFURA_ID
-  );
-  const ens = new ENS({ provider, ensAddress: getEnsAddress("1") });
-  const name = await ens.getName(address);
-  return name;
-}
+// export async function getEns(address) {
+//   const provider = new ethers.providers.JsonRpcProvider(
+//     "https://mainnet.infura.io/v3/" + process.env.INFURA_ID
+//   );
+//   const ens = new ENS({ provider, ensAddress: getEnsAddress("1") });
+//   const name = await ens.getName(address).then(r => console.log("ens",r));
+//   return name;
+// }
 
 //###################### NFTs #############################
 
@@ -140,6 +141,10 @@ async function getNfts(address) {
   }
 }
 
+async function getENSNfts(nfts) {
+  return nfts.filter(nft => nft.contract_address === ENS_CONTRACT);
+}
+
 async function getZapperNfts(nfts) {
   return nfts.filter(nft => nft.contract_address === ZAPPER_CONTRACT);
 }
@@ -158,9 +163,12 @@ async function getData(address, chainId, provider) {
 
   // Protocol Score
   const aaveVotes = await getAaveGovernanceVotes(address);
-  const ens = await getEns(address, provider);
-  const zapperNfts = await getZapperNfts(nfts);
+  
+  // const ens = await getEns(address, provider);
+  const ens = await getENSNfts(nfts);
 
+  const zapperNfts = await getZapperNfts(nfts);
+  console.log("ENS",ens)
   return {
     usdBalance,
     tokenList,
@@ -191,7 +199,7 @@ async function getRawValues(address, chainId, provider) {
     ens,
     zapperNfts
   } = data;
-  console.log(tokenList);
+  console.log(nfts);
   return {
     usd_balance: usdBalance,
     token_holdings_raw: quantityOfTOkens,
@@ -200,7 +208,7 @@ async function getRawValues(address, chainId, provider) {
     compound_interactions_raw: compInteractions.length,
     NFT_score_raw: nfts.length,
     aave_votes_raw: aaveVotes,
-    ens_raw: ens.name,
+    ens_raw: {amount:  ens.length, name:ens[0].name},
     zapperNfts_raw: zapperNfts.length
   };
 }
@@ -289,7 +297,8 @@ export async function computeScore(address, chainId, provider) {
       score: scores.aave_votes,
     },
     ens: {
-      value: data.ens,
+      value: data.ens.amount,
+      name: data.ens.name,
       score: scores.ens_score,
     },
     zapper: {

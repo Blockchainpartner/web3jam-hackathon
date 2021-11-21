@@ -144,7 +144,7 @@ export const ScoringContextApp = ({ children }) => {
         },
         protocolScore: {
           aave: score.aave.value,
-          ens: score.ens.value.name,
+          ens: score.ens.name,
           zapper: score.zapper.value
         },
       });
