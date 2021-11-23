@@ -19,8 +19,8 @@ const Navbar = () => {
         </Link>
         <div className="grid grid-rows-1 grid-cols-3 xl:gap-10 gap-6 ml-8 xl:ml-14">
           <Link href="/integrations">Integrations</Link>
-          <a href="/tech">How it works</a>
-          <a href="/about">About</a>
+          <p className="cursor-not-allowed font-medium">How it works</p>
+          <p className="cursor-not-allowed font-medium">About</p>
         </div>
       </div>
       {account ? (

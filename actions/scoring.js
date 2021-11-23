@@ -208,7 +208,7 @@ async function getRawValues(address, chainId, provider) {
     compound_interactions_raw: compInteractions.length,
     NFT_score_raw: nfts.length,
     aave_votes_raw: aaveVotes,
-    ens_raw: {amount:  ens.length, name:ens[0].name},
+    ens_raw: {amount:  ens.length, name:ens.name},
     zapperNfts_raw: zapperNfts.length
   };
 }

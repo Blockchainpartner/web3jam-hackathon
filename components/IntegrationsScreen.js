@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import SyntaxHighlighter from "react-syntax-highlighter/dist/esm/default-highlight";
-import { shadesOfPurple } from "react-syntax-highlighter/dist/esm/styles/hljs";
+// import SyntaxHighlighter from "react-syntax-highlighter/dist/esm/default-highlight";
+// import { shadesOfPurple } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { getLorem, INTEGRATION_CODE } from "../utils/utils";
 
 const integrations = {
@@ -24,7 +24,7 @@ const integrations = {
   },
 };
 
-function getScoreTile() {
+function GetScoreTile() {
   const [hideContent, setHideContent] = useState(true);
   const [loading, setLoading] = useState(false);
   const fakeUnlock = () => {
@@ -38,8 +38,8 @@ function getScoreTile() {
     <div className="box py-6">
       {/* <p className="font-semibold">{"Example"}</p> */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-        <div className="xl:col-span-2">
-          <SyntaxHighlighter
+        <div className="xl:col-span-2" style={{backgroundImage: "url('/mock.png')"}}/>
+          {/* <SyntaxHighlighter
             language="js"
             style={shadesOfPurple}
             wrapLines
@@ -47,8 +47,7 @@ function getScoreTile() {
             className="rounded px-4 py-2 text-sm"
           >
             {INTEGRATION_CODE}
-          </SyntaxHighlighter>
-        </div>
+          </SyntaxHighlighter> */}
         <div className="bg-white relative p-4 rounded pb-16">
           <button
             className="absolute btn text-xs disabled:cursor-not-allowed disabled:opacity-20 top-2 right-2"
@@ -127,7 +126,7 @@ const IntegrationsScreen = () => {
             }
           </p>
         </div>
-        <div className="mt-6">{getScoreTile()}</div>
+        <div className="mt-6">{GetScoreTile()}</div>
       </div>
 
       <div className="mt-10">

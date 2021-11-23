@@ -16,7 +16,7 @@ import { useWeb3React } from "@web3-react/core";
 import NftModal from "./modals/NftModal";
 import Link from "next/link";
 
-function baseScoringTiles() {
+function BaseScoringTiles() {
   const context = useScoring();
   const { scoring, scoringValues, loaded } = context;
   return (
@@ -62,7 +62,7 @@ function baseScoringTiles() {
   );
 }
 
-function bonusScoringTiles() {
+function BonusScoringTiles() {
   const context = useScoring();
   const { scoring, scoringValues, loaded } = context;
   const displayCondition = Object.keys(scoring.protocolScore).some(
@@ -119,7 +119,7 @@ function bonusScoringTiles() {
   }
 }
 
-function mintNftButton() {
+function MintNftButton() {
   const web3Context = useWeb3React();
   const scoringContext = useScoring();
   const nftContext = useNftContext();
@@ -147,7 +147,7 @@ function seeNftButton(nftId) {
     <a
       className="btn flex items-center justify-between disabled:cursor-not-allowed disabled:opacity-30"
       target="_blank"
-      href={`https://rinkeby.etherscan.io/token/0xa368eeb3da7148158771982d793825e9b553429d?a=${nftId}`}
+      href={`https://rinkeby.etherscan.io/token/0xa368eeb3da7148158771982d793825e9b553429d?a=${nftId}`} rel="noreferrer"
     >
       <RiExternalLinkFill />
       <p className="ml-2">{`NFT ID: ${nftId}`}</p>
@@ -169,7 +169,7 @@ const Scoring = () => {
             }
           </p>
         </div>
-        {nftId ? seeNftButton(nftId) : mintNftButton()}
+        {nftId ? seeNftButton(nftId) : MintNftButton()}
       </div>
       <div className="mt-10">
         <div className="flex flex-col items-start">
@@ -178,7 +178,7 @@ const Scoring = () => {
             {"The score base that analyzes general criteria"}
           </p>
         </div>
-        <div className="mt-6">{baseScoringTiles()}</div>
+        <div className="mt-6">{BaseScoringTiles()}</div>
       </div>
       <div className="mt-10">
         <div className="flex flex-col items-start">
@@ -187,7 +187,7 @@ const Scoring = () => {
             {"Score bonuses based on protocol-specific criteria"}
           </p>
         </div>
-        <div className="mt-6">{bonusScoringTiles()}</div>
+        <div className="mt-6">{BonusScoringTiles()}</div>
       </div>
     </div>
   );
