@@ -140,7 +140,7 @@ export const ScoringContextApp = ({ children }) => {
           tokenHoldings: score.token_holdings.value,
           govTokenHoldings: score.governance.value,
           compoundInteractions: score.compound.value,
-          scamTokenHoldings: score.scam_score,
+          scamTokenHoldings: score.scam.score,
         },
         protocolScore: {
           aave: score.aave.value,
